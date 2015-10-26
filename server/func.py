@@ -4,25 +4,29 @@
 
 from server import *
 
-#连接数据库
+
+# 连接数据库
 def connect_db():
     return sqlite3.connect(DATABASE)
 
-#获取数据库连接
+
+# 获取数据库连接
 def get_connection():
     db = getattr(g, '_db', None)
     if db is None:
         db = g._db = connect_db()
     return db
 
-#获取数据条目
+
+# 获取数据条目
 def show_entries():
     db = get_connection()
     cur = db.execute('select * from pcap')
-    entries = [dict(id=row[0], filename=row[1] ,filepcap=row[2], filesize=row[3]) for row in cur.fetchall()]
+    entries = [dict(id=row[0], filename=row[1], filepcap=row[2], filesize=row[3]) for row in cur.fetchall()]
     return entries
 
-#获取包信息
+
+# 获取包信息
 def get_pcap_entries(id):
     try:
         id = int(id)
@@ -30,18 +34,20 @@ def get_pcap_entries(id):
         print 'Notice : You are being attacked.'
         exit()
     db = get_connection()
-    cur = db.execute('select * from pcap where id ='+ str(id) + ';')
-    entries = [dict(id=row[0], filename=row[1] ,filepcap=row[2], filesize=row[3]) for row in cur.fetchall()]
+    cur = db.execute('select * from pcap where id =' + str(id) + ';')
+    entries = [dict(id=row[0], filename=row[1], filepcap=row[2], filesize=row[3]) for row in cur.fetchall()]
     return entries
 
-#执行sql命令
+
+# 执行sql命令
 def sql_exec(sql):
     db = get_connection()
     db.execute(sql)
     print "[*]execute sql: " + sql
     db.commit()
 
-#列出文件
+
+# 列出文件
 def list_file(CapFiles):
     files = os.listdir(UPLOAD_FOLDER)
     if '.DS_Store' in files:
@@ -51,37 +57,44 @@ def list_file(CapFiles):
         if file in dbfiles:
             pass
         else:
-            filesize = convertBytes(os.path.getsize(UPLOAD_FOLDER+file))
-            pcapnum = get_capture_count(UPLOAD_FOLDER+file)
-            sql_exec('insert into pcap (file,pcapnum,size) values ("'+file+'",'+str(pcapnum)+',"'+filesize+'");')
+            filesize = convertBytes(os.path.getsize(UPLOAD_FOLDER + file))
+            pcapnum = get_capture_count(UPLOAD_FOLDER + file)
+            sql_exec(
+                'insert into pcap (file,pcapnum,size) values ("' + file + '",' + str(pcapnum) + ',"' + filesize + '");')
     for dbfile in dbfiles:
         if dbfile not in files:
-            sql_exec('delete from pcap where file = "'+dbfile+'";')
+            sql_exec('delete from pcap where file = "' + dbfile + '";')
         else:
             pass
 
-#获取数据包数目
+
+# 获取数据包数目
 def get_capture_count(filename):
     p = pyshark.FileCapture(filename, only_summaries=True, keep_packets=False)
     p.load_packets()
     return len(p)
 
-#文件大小表示
+
+# 文件大小表示
 def convertBytes(bytes, lst=['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB']):
+    print('bytes:',bytes)
     i = int(math.floor(math.log(bytes, 1024)))
     if i >= len(lst):
         i = len(lst) - 1
-    return ('%.2f' + " " + lst[i]) % (bytes/math.pow(1024, i))
+    return ('%.2f' + " " + lst[i]) % (bytes / math.pow(1024, i))
 
-#判断文件后缀
+
+# 判断文件后缀
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-#获取包内容
+
+# 获取包内容
 def decode_capture_file(pcapfile, filter=None):
     if filter:
-        cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True, display_filter=filter)
-    else:   
+        cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True,
+                                  display_filter=filter)
+    else:
         cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True)
 
     cap.load_packets(timeout=5)
@@ -90,18 +103,18 @@ def decode_capture_file(pcapfile, filter=None):
     details = {
         'stats': {
             'breakdown': {},
-            'length_buckets': {'0-200': 0, '201-450': 0, '451-800':0, '801-1200':0, '1201-1500': 0}
+            'length_buckets': {'0-200': 0, '201-450': 0, '451-800': 0, '801-1200': 0, '1201-1500': 0}
         },
         'packets': [],
         # 'linechart': []
     }
     avg_length = []
-    #解包
+    # 解包
     def decode_packet(packet):
         pkt_details = {
-            'number' : packet.no,
-            'length' : packet.length,
-            'time' : packet.time
+            'number': packet.no,
+            'length': packet.length,
+            'time': packet.time
         }
         pkt_details['src_ip'] = packet.source
         pkt_details['dst_ip'] = packet.destination
@@ -141,14 +154,15 @@ def decode_capture_file(pcapfile, filter=None):
     details['stats']['avg_length'] = sum(avg_length) / len(avg_length)
     return details
 
-#获取包细节
+
+# 获取包细节
 def get_packet_detail(pcapfile, num):
     cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile))
 
     old_stdout = sys.stdout
     sys.stdout = mystdout = StringIO()
 
-    cap[int(num)-1].pretty_print()
+    cap[int(num) - 1].pretty_print()
     sys.stdout = old_stdout
     detail = '''
 <script type="text/javascript">
@@ -188,7 +202,7 @@ $(document).ready(function(){
             <div id="%(link)s" class="content">
                 <div class="ui black segment">
             ''' % {'name': line[:-1], 'link': line.replace(' ', '-').strip(':')}
-        else:   
+        else:
             keyword = line.split(': ')[0] + ': '
 
             try:
@@ -196,7 +210,7 @@ $(document).ready(function(){
             except IndexError:
                 keyword = ''
                 value = line
-            
+
             try:
                 keyword = keyword.split('= ')[1]
             except IndexError:
@@ -211,7 +225,8 @@ $(document).ready(function(){
 '''
     return detail
 
-#获取包信息
+
+# 获取包信息
 def get_statistics(file):
     tcp = 0
     udp = 0
@@ -219,7 +234,7 @@ def get_statistics(file):
     icmp = 0
     other = 0
     pcapstat = {}
-    pcap = rdpcap(UPLOAD_FOLDER+file)
+    pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if TCP in packet:
             tcp = tcp + 1
@@ -239,50 +254,54 @@ def get_statistics(file):
     pcapstat['total'] = str(tcp + udp + arp + icmp + other)
     return pcapstat
 
-#获取包来源地址
+
+# 获取包来源地址
 def get_ip_src(file):
     ipsrc = []
-    pcap = rdpcap(UPLOAD_FOLDER+file)
+    pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if TCP in packet:
             # if packet.getlayer('TCP').flags == 2:
-                ipsrc.append(packet.getlayer('IP').src)
+            ipsrc.append(packet.getlayer('IP').src)
     ipsrclist = Counter(ipsrc).most_common()
     return ipsrclist
 
-#获取包去向地址
+
+# 获取包去向地址
 def get_ip_dst(file):
     ipdst = []
-    pcap = rdpcap(UPLOAD_FOLDER+file)
+    pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if TCP in packet:
             # if packet.getlayer('TCP').flags == 2:
-                ipdst.append(packet.getlayer('IP').dst)
+            ipdst.append(packet.getlayer('IP').dst)
     ipdstlist = Counter(ipdst).most_common()
     return ipdstlist
 
-#获取包去向端口
+
+# 获取包去向端口
 def get_port_dst(file):
     dstport = []
-    pcap = rdpcap(UPLOAD_FOLDER+file)
+    pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if TCP in packet:
             dstport.append(packet.getlayer('TCP').dport)
     dstportlist = Counter(dstport).most_common()
     return dstportlist
 
-#获取DNS请求
+
+# 获取DNS请求
 def get_dns(file):
     dns = []
-    pcap = rdpcap(UPLOAD_FOLDER+file)
+    pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if DNS in packet:
-                res = packet.getlayer('DNS').qd.qname
-                if res[len(res) - 1] == '.':
-                    res = res[:-1]
-                dns.append(res)
+            res = packet.getlayer('DNS').qd.qname
+            if res[len(res) - 1] == '.':
+                res = res[:-1]
+            dns.append(res)
     dns = Counter(dns).most_common()
-    dnstable ='''
+    dnstable = '''
 <table class="ui table">
     <thead>
         <tr>
@@ -291,7 +310,7 @@ def get_dns(file):
         </tr>
     </thead>
     <tbody>
-''' 
+'''
     for dnsreq in dns:
         dnstable += '''
         <tr>
@@ -302,36 +321,39 @@ def get_dns(file):
             %(num)s
             </td>
         </tr>
-''' % { 'dns':dnsreq[0],'num':str(dnsreq[1])} 
+''' % {'dns': dnsreq[0], 'num': str(dnsreq[1])}
     dnstable += '''
     </tbody>
   </table>
 '''
-    return dns,dnstable
+    return dns, dnstable
 
-#邮件数据包提取
+
+# 邮件数据包提取
 def get_mail(file):
     mailpkts = []
     result = "<p>"
-    pcap = rdpcap(UPLOAD_FOLDER+file)
+    pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if TCP in packet:
-            if packet.getlayer('TCP').dport == 110 or packet.getlayer('TCP').sport == 110 or packet.getlayer('TCP').dport == 143 or packet.getlayer('TCP').sport == 143 :
+            if packet.getlayer('TCP').dport == 110 or packet.getlayer('TCP').sport == 110 or packet.getlayer(
+                    'TCP').dport == 143 or packet.getlayer('TCP').sport == 143:
                 mailpkts.append(packet)
     for packet in mailpkts:
         if packet.getlayer('TCP').flags == 24:
-            result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
+            result = result + packet.getlayer('Raw').load.replace(' ', '&nbsp;').replace('\n', '<br/>')
     if result == "<p>":
         result = result + "No Mail Packets!"
     result = result + "</p>"
     result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
     return result
 
-#Web数据包提取
+
+# Web数据包提取
 def get_web(file):
     webpkts = []
     result = ""
-    pcap = rdpcap(UPLOAD_FOLDER+file)
+    pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if TCP in packet:
             if packet.getlayer('TCP').dport == 80 or packet.getlayer('TCP').dport == 8080:
@@ -339,7 +361,7 @@ def get_web(file):
     for packet in webpkts:
         if packet.getlayer('TCP').flags == 24:
             result = result + '''<div class="ui vertical segment"><p>'''
-            result = result + packet.getlayer('Raw').load.replace(' ','&nbsp;').replace('\n','<br/>')
+            result = result + packet.getlayer('Raw').load.replace(' ', '&nbsp;').replace('\n', '<br/>')
             result = result + '''</p></div>'''
     if result == "":
         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
