@@ -5,3 +5,4 @@ chartkick==0.4.2
 Logbook==0.7.0
 gevent
 simplejson
+scapy

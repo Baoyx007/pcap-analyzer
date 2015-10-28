@@ -19,5 +19,6 @@ DATABASE = 'server/db/db.sqlite'
 app = Flask(__name__)
 app.jinja_env.add_extension("chartkick.ext.charts")
 
+# print(__name__)
 import views
 import func

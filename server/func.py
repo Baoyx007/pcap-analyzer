@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # author: le4f.net
+from scapy.layers.inet import *
 
 from server import *
-
 
 # 连接数据库
 def connect_db():
@@ -77,7 +77,7 @@ def get_capture_count(filename):
 
 # 文件大小表示
 def convertBytes(bytes, lst=['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB']):
-    print('bytes:',bytes)
+    print('bytes:', bytes)
     i = int(math.floor(math.log(bytes, 1024)))
     if i >= len(lst):
         i = len(lst) - 1
@@ -95,7 +95,8 @@ def decode_capture_file(pcapfile, filter=None):
         cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True,
                                   display_filter=filter)
     else:
-        cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True)
+        cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True,
+                                  display_filter='http')
 
     cap.load_packets(timeout=5)
     if len(cap) == 0:
@@ -176,6 +177,7 @@ $(document).ready(function(){
 </div>
 <div class="content">'''
     for line in mystdout.getvalue().split('\n'):
+        print('line in mystdout.getvalue:', line)
         if line == 'self._packet_string':
             continue
         elif 'Layer ETH' in line:
@@ -290,6 +292,7 @@ def get_port_dst(file):
     return dstportlist
 
 
+r'''
 # 获取DNS请求
 def get_dns(file):
     dns = []
@@ -301,7 +304,7 @@ def get_dns(file):
                 res = res[:-1]
             dns.append(res)
     dns = Counter(dns).most_common()
-    dnstable = '''
+    dnstable = \'''
 <table class="ui table">
     <thead>
         <tr>
@@ -310,9 +313,9 @@ def get_dns(file):
         </tr>
     </thead>
     <tbody>
-'''
+\'''
     for dnsreq in dns:
-        dnstable += '''
+        dnstable += \'''
         <tr>
             <td>
             %(dns)s
@@ -321,12 +324,14 @@ def get_dns(file):
             %(num)s
             </td>
         </tr>
-''' % {'dns': dnsreq[0], 'num': str(dnsreq[1])}
-    dnstable += '''
+\''' % {'dns': dnsreq[0], 'num': str(dnsreq[1])}
+    dnstable += \'''
     </tbody>
   </table>
-'''
+\'''
     return dns, dnstable
+
+'''
 
 
 # 邮件数据包提取
