@@ -5,6 +5,7 @@ from scapy.layers.inet import *
 
 from server import *
 
+
 # 连接数据库
 def connect_db():
     return sqlite3.connect(DATABASE)
@@ -95,12 +96,10 @@ def decode_capture_file(pcapfile, filter=None):
         cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True,
                                   display_filter=filter)
     else:
-        cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True,
-                                  display_filter='http')
+        cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile), keep_packets=False, only_summaries=True)
 
     cap.load_packets(timeout=5)
-    if len(cap) == 0:
-        return 0, 'No packets found.'
+
     details = {
         'stats': {
             'breakdown': {},
@@ -109,6 +108,9 @@ def decode_capture_file(pcapfile, filter=None):
         'packets': [],
         # 'linechart': []
     }
+    if len(cap) == 0:
+        details['stats']['avg_length'] = 'no package found'
+        return details
     avg_length = []
     # 解包
     def decode_packet(packet):

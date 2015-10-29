@@ -56,7 +56,7 @@ def analyze(id):
     ipdst = get_ip_dst(file)
     dstport = get_port_dst(file)
     # 如生产环境需注意可能存在的XSS
-    pcapstat['mail'] = get_mail(file)
+    # pcapstat['mail'] = get_mail(file)
     pcapstat['web'] = get_web(file)
     # dns, pcapstat['dnstable'] = get_dns(file)
     pcapstat['ipsrc'] = dict(ipsrc)
@@ -85,7 +85,7 @@ def packetdetail(id, num):
 
 
 # 产生中间配置
-@app.route('/autogen_1/<id>/<num>', method=['GET'])
+@app.route('/autogen_1/<id>/<num>', methods=['GET'])
 def gen_config_1(id, num):
     try:
         id = int(id)
