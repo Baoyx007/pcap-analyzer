@@ -363,13 +363,20 @@ def get_web(file):
     pcap = rdpcap(UPLOAD_FOLDER + file)
     for packet in pcap:
         if TCP in packet:
-            if packet.getlayer('TCP').dport == 80 or packet.getlayer('TCP').dport == 8080:
-                webpkts.append(packet)
-    for packet in webpkts:
-        if packet.getlayer('TCP').flags == 24:
-            result = result + '''<div class="ui vertical segment"><p>'''
-            result = result + packet.getlayer('Raw').load.replace(' ', '&nbsp;').replace('\n', '<br/>')
-            result = result + '''</p></div>'''
+            if packet.getlayer('TCP').payload.name != 'NoPayload':
+                result += '''<div class="ui vertical segment"><p>'''
+                result = result + packet.getlayer('Raw').load.replace(' ', '&nbsp;').replace('\n', '<br/>')
+                result = result + '''</p></div>'''
+
+    # for packet in pcap:
+    #     if TCP in packet:
+    #         if packet.getlayer('TCP').dport == 80 or packet.getlayer('TCP').dport == 8080:
+    #             webpkts.append(packet)
+    # for packet in webpkts:
+    #     if packet.getlayer('TCP').flags in (24, 16) and packet.getlayer('TCP').payload.name != 'NoPayload':  # 16
+    #         result += '''<div class="ui vertical segment"><p>'''
+    #         result = result + packet.getlayer('Raw').load.replace(' ', '&nbsp;').replace('\n', '<br/>')
+    #         result = result + '''</p></div>'''
     if result == "":
         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
     result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
