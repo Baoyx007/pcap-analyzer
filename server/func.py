@@ -358,15 +358,19 @@ def get_mail(file):
 
 # Web数据包提取
 def get_web(file):
-    webpkts = []
     result = ""
     pcap = rdpcap(UPLOAD_FOLDER + file)
+    i = 0
     for packet in pcap:
+        i+=1
+        # 过滤 tcp帧中有数据的帧
         if TCP in packet:
-            if packet.getlayer('TCP').payload.name != 'NoPayload':
+            raw = packet.getlayer('Raw')
+            if raw:
                 result += '''<div class="ui vertical segment"><p>'''
-                result = result + packet.getlayer('Raw').load.replace(' ', '&nbsp;').replace('\n', '<br/>')
-                result = result + '''</p></div>'''
+                result += r'id=' + str(i)+r'<br>'
+                result = result + raw.load.replace(' ', '&nbsp;').replace('\n', '<br/>')
+                result += r'''</p></div>'''
 
     # for packet in pcap:
     #     if TCP in packet:
