@@ -1,9 +1,7 @@
 Flask==0.10.1
 Werkzeug==0.9.4
-pyshark==
+pyshark==0.3.3
 chartkick==0.4.2
-Logbook==
+Logbook==0.7.0
 gevent
 simplejson
-scapy==2.2.0
-pcap==1.1

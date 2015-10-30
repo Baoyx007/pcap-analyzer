@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # author: le4f.net
 
-from server.autogen import *
 from server.func import *
+from server.autogen import *
 
 
 # 主页
@@ -84,17 +84,15 @@ def packetdetail(id, num):
         return 0
 
 
-# 产生中间配置
-@app.route('/autogen_1/<id>/<num>', methods=['GET'])
-def gen_config_1(id, num):
-    try:
+# 产生中间配置1
+@app.route('/autogen_1/<id>', methods=['POST'])
+def gen_config_1(id):
+    if request.method == 'POST':
+        frame_ids = request.get_json()['frameids']
         id = int(id)
-        num = int(num)
+        # TODO 文件可能不存在
         file = get_pcap_entries(id)[0]['filename']
-        return gen_config_1_json(file, num), 200
-    except:
-        print('产生配置一出错')
-        return '产生配置一出错', 500
+        return gen_config_1_json(file, frame_ids), 200
 
 
 # 删除包
