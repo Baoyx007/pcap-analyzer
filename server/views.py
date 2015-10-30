@@ -92,7 +92,7 @@ def gen_config_1(id):
         id = int(id)
         # TODO 文件可能不存在
         file = get_pcap_entries(id)[0]['filename']
-        return gen_config_1_json(file, frame_ids), 200
+        return gen_config_1_json(file, frame_ids)
 
 
 # 删除包
