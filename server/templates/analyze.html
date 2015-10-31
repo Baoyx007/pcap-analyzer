@@ -2,7 +2,6 @@
 {% block content %}
 {% import "library.html" as library %}
 <h3 class="ui dividing header">Pcap File Stats</h3>
-	<div class="ui stacked segment">
 		<div class="ui fitted stackable grid">
 			<div class="ui sixteen wide column">
 				<div class="ui black center aligned segment">
@@ -188,15 +187,40 @@
 			</div>
 		</div>
 		<div class="ui bottom attached tab segment" data-tab="third">
-			<div class="ui raised segment">
-			<a class="ui red ribbon label">Web Packets</a>
-				<div class="ui black segment" style = "word-wrap: break-word;word-break:break-all;">
+			<div class="ui raised segment" style=" height:55rem; overflow:auto">
+				<a class="ui red ribbon label">Web Packets</a>
+					<script>
+					    $(document).ready(function(){
+					    	var arrayid=new Array();
+  							$("div.ui.raised.segment").click(function(){
+  									var id=$(this).attr("id");
+  									if(!isNaN(id))
+  										arrayid.push(id);
+    								$("#"+id).css("background-color","#ff9966");
+ 							 });
+ 							 $("#send-button").click(function(){
+  									if(arrayid.length>0){
+  										<!--var str="{'frameids': [";-->
+  										<!--for(var i=0;i<arrayid.length-1;i++)-->
+  												<!--str=str+arrayid[i]+",";-->
+  										<!--str=str+arrayid[arrayid.length-1]+"]}";-->
+    									$.post("http://localhost:8080/analyze/6",{frameids:arrayid});
+  										}
+  									else{
+  										alert("Nothing");
+  									}
+ 							 });
+						});
+					</script>
 					{% autoescape false %}
 					{{pcapstat.web}}
 					{% endautoescape %}
-				</div>
+			</div>
+			<div class="ui red small right floated button" id="send-button">
+		          <i class="send icon"></i>Send
 			</div>
 		</div>
+
 		<!-- div class="ui bottom attached tab segment" data-tab="fourth">
 			<div class="ui raised segment">
 				<a class="ui red ribbon label">DNS Requests</a>
