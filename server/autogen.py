@@ -25,4 +25,8 @@ def gen_config_1_json(pcapfile, frame_ids):
             package.http.prev_request_in
 
         data_list.append(mid_data)
-    return flask.jsonify(*data_list)
+
+    from flask import make_response
+    import json
+    res = make_response(json.dumps(data_list))
+    return res
