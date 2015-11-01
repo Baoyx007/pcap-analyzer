@@ -367,10 +367,10 @@ def get_web(file):
         if TCP in packet:
             raw = packet.getlayer('Raw')
             if raw:
-                result += '''<div class="ui vertical segment"><p>'''
+                result += '<div class="ui raised segment" id="%d"><p>' % i
                 result += r'id=' + str(i)+r'<br>'
                 result = result + raw.load.replace(' ', '&nbsp;').replace('\n', '<br/>')
-                result += r'''</p></div>'''
+                result += r'''</p></div>  '''
 
     if result == "":
         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
