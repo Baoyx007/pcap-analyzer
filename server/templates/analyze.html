@@ -200,11 +200,12 @@
  							 });
  							 $("#send-button").click(function(){
   									if(arrayid.length>0){
+  										var url_id=window.location.href.substring(30);
   									    var ids={"frameids":arrayid.join(',')};
                                         $.ajax({
                                             type:'POST',
                                             contentType:'application/json; charset=utf-8',
-                                            url:'/autogen_1/6',
+                                            url:'/autogen_1/'+url_id,
                                             data:$.toJSON(ids),
                                             success:function(response){
                                                 document.write(response);
