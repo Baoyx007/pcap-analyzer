@@ -194,9 +194,16 @@
 					    	var arrayid=new Array();
   							$("div.ui.raised.segment").click(function(){
   									var id=$(this).attr("id");
-  									if(!isNaN(id))
-  										arrayid.push(id);
-    								$("#"+id).css("background-color","#ff9966");
+  									var segment_id=jQuery.inArray(id,arrayid);
+  									if(segment_id==-1)
+  									{
+                                        if(!isNaN(id))
+                                            arrayid.push(id);
+                                        $("#"+id).css("background-color","#ff9966");
+                                    }else{
+                                        arrayid.splice(segment_id,1);
+                                        $("#"+id).css("background-color","#ffffff");
+                                    }
  							 });
  							 $("#send-button").click(function(){
   									if(arrayid.length>0){
