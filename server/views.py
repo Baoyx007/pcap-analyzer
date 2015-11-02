@@ -92,7 +92,11 @@ def gen_config_1(id):
         id = int(id)
         # TODO 文件可能不存在
         file = get_pcap_entries(id)[0]['filename']
-        return gen_config_1_json(file, frame_ids)
+        ids_int =[]
+        for id in frame_ids.split(','):
+            ids_int.append(int(id))
+        mid_data_list = gen_config_1_json(file, ids_int)
+        return render_template('gen_1.html', DataList=mid_data_list)
 
 
 # 删除包

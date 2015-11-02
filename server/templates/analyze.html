@@ -200,12 +200,17 @@
  							 });
  							 $("#send-button").click(function(){
   									if(arrayid.length>0){
-  										<!--var str="{'frameids': [";-->
-  										<!--for(var i=0;i<arrayid.length-1;i++)-->
-  												<!--str=str+arrayid[i]+",";-->
-  										<!--str=str+arrayid[arrayid.length-1]+"]}";-->
-    									$.post("url",{frameids:arrayid});
-  										}
+  									    var ids={"frameids":arrayid.join(',')};
+                                        $.ajax({
+                                            type:'POST',
+                                            contentType:'application/json; charset=utf-8',
+                                            url:'/autogen_1/6',
+                                            data:$.toJSON(ids),
+                                            success:function(response){
+                                                document.write(response);
+                                            }
+                                        });
+  									}
   									else{
   										alert("Nothing");
   									}
