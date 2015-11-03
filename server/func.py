@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # author: le4f.net
 from scapy.layers.inet import *
-
 from server import *
 
 
@@ -22,7 +21,7 @@ def get_connection():
 # 获取数据条目
 def show_entries():
     db = get_connection()
-    cur = db.execute('select * from pcap')
+    cur = db.execute('SELECT * FROM pcap')
     entries = [dict(id=row[0], filename=row[1], filepcap=row[2], filesize=row[3]) for row in cur.fetchall()]
     return entries
 
@@ -112,6 +111,7 @@ def decode_capture_file(pcapfile, filter=None):
         details['stats']['avg_length'] = 'no package found'
         return details
     avg_length = []
+
     # 解包
     def decode_packet(packet):
         pkt_details = {
@@ -362,17 +362,35 @@ def get_web(file):
     pcap = rdpcap(UPLOAD_FOLDER + file)
     i = 0
     for packet in pcap:
-        i+=1
+        i += 1
         # 过滤 tcp帧中有数据的帧
         if TCP in packet:
             raw = packet.getlayer('Raw')
             if raw:
                 result += '<div class="ui raised segment" id="%d"><p>' % i
-                result += r'id=' + str(i)+r'<br>'
+                result += r'id=' + str(i) + r'<br>'
                 result = result + raw.load.replace(' ', '&nbsp;').replace('\n', '<br/>')
                 result += r'''</p></div>  '''
 
     if result == "":
         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
     result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
+    # get_http(file)
     return result
+
+
+# Web数据包提取
+# 用pyshark
+# http 中的数据会丢失
+def get_http(file):
+    result = ""
+    cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, file), display_filter='http')
+    i = 0
+    for packet in cap:
+        i += 1
+        # result += packet.http
+        packet.pretty_print()
+    # if result == "":
+    #     result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
+    # result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
+    # print(result)
