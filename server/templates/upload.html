@@ -31,9 +31,6 @@
 		  <tfoot class="full-width">
 		    <tr>
 		      <th colspan="4">
-		        <div class="ui black small right floated button" id="analyze-button">
-		          <i class="search icon" ></i>Analyze
-		        </div>
 		        <div class="ui small button" id="delete-button">
 		          Delete
 		        </div>
@@ -44,8 +41,36 @@
 		    </tr>
 		  </tfoot>
 		</table>
+		<div class="ui black raised segment">
+			<h5 class="ui dividing header">Select City</h5>
+			<div>
+				<select  class="ui search dropdown" id="searchCity" >
+					<option value="">Shanghai</option>
+					<option value="SH">Shanghai</option>
+					<option value="NJ">Nanjing</option>
+				</select></div>
+			<div class="ui secondary segment">
+    				<p id="cityMessage"></p>
+			</div>
+		</div>
+		<script>
+				var s={"Shanghai":[121,31],"Nanjing":[118,32]};
+				function cityToStr(text){
+					var t=s[text].toString().split(',');
+					$("#cityMessage").html("City:"+text+", longitude:"+t[0]+", latitude:"+t[1]);
+				}
+				var text=$("#searchCity").find("option:selected").text();
+					cityToStr(text);
+				$("#searchCity").change(function(){
+					text=$("#searchCity").find("option:selected").text();
+					cityToStr(text);
+				});
+		</script>
+		<div class="ui black small right floated button" id="analyze-button">
+		          <i class="search icon" ></i>Analyze
+		</div>
 
-	<div class="ui small del modal " id='del-confirm'>
+	<div class="ui  small del modal " id='del-confirm'>
 	    <div class="header">
 	      Delete File?
 	    </div>
