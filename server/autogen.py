@@ -19,11 +19,11 @@ def gen_config_1_json(pcapfile, frame_ids):
             # TODO 以后要增加TXL
             mid_data = extract_mid_data(package)
         else:
-            if hasattr(package.http,'request_in'):
+            if hasattr(package.http, 'request_in'):
                 req_id = int(package.http.request_in)
             else:
                 req_id = int(package.http.prev_request_in)
-            mid_data = extract_mid_data(cap[req_id-1])
+            mid_data = extract_mid_data(cap[req_id - 1])
 
         data_list.append(mid_data)
 

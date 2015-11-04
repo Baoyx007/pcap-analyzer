@@ -3,6 +3,7 @@
 # author: le4f.net
 from scapy.layers.inet import *
 from server import *
+from pyshark_utils import parse_hexdata
 
 
 # 连接数据库
@@ -294,48 +295,6 @@ def get_port_dst(file):
     return dstportlist
 
 
-r'''
-# 获取DNS请求
-def get_dns(file):
-    dns = []
-    pcap = rdpcap(UPLOAD_FOLDER + file)
-    for packet in pcap:
-        if DNS in packet:
-            res = packet.getlayer('DNS').qd.qname
-            if res[len(res) - 1] == '.':
-                res = res[:-1]
-            dns.append(res)
-    dns = Counter(dns).most_common()
-    dnstable = \'''
-<table class="ui table">
-    <thead>
-        <tr>
-        <th class="twelve wide">DNS Request</th>
-        <th class="four wide">Request Num</th>
-        </tr>
-    </thead>
-    <tbody>
-\'''
-    for dnsreq in dns:
-        dnstable += \'''
-        <tr>
-            <td>
-            %(dns)s
-            </td>
-            <td>
-            %(num)s
-            </td>
-        </tr>
-\''' % {'dns': dnsreq[0], 'num': str(dnsreq[1])}
-    dnstable += \'''
-    </tbody>
-  </table>
-\'''
-    return dns, dnstable
-
-'''
-
-
 # 邮件数据包提取
 def get_mail(file):
     mailpkts = []
@@ -360,37 +319,30 @@ def get_mail(file):
 def get_web(file):
     result = ""
     pcap = rdpcap(UPLOAD_FOLDER + file)
+    py_cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, file))
     i = 0
     for packet in pcap:
         i += 1
-        # 过滤 tcp帧中有数据的帧
+        # 过滤 tcp帧
         if TCP in packet:
             raw = packet.getlayer('Raw')
-            if raw:
+            # 过滤tcp中有数据的帧
+            if not raw:
+                continue
+            # 用pyshark分析帧
+            py_frame = py_cap[i - 1]
+            if hasattr(py_frame.tcp, 'analysis_retransmission'):
+                continue
+            if hasattr(py_frame, 'http'):
                 result += '<div class="ui raised segment" id="%d"><p>' % i
                 result += r'id=' + str(i) + r'<br>'
                 result = result + raw.load.replace(' ', '&nbsp;').replace('\n', '<br/>')
+                py_frame.http.pretty_print()
+                if hasattr(py_frame, 'data'):
+                    result += '<br>'
+                    result += parse_hexdata(py_frame.data.tcp_reassembled_data)
                 result += r'''</p></div>  '''
-
     if result == "":
         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
     result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
-    # get_http(file)
     return result
-
-
-# Web数据包提取
-# 用pyshark
-# http 中的数据会丢失
-def get_http(file):
-    result = ""
-    cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, file), display_filter='http')
-    i = 0
-    for packet in cap:
-        i += 1
-        # result += packet.http
-        packet.pretty_print()
-    # if result == "":
-    #     result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
-    # result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
-    # print(result)
