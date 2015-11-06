@@ -207,7 +207,7 @@
  							 });
  							 $("#send-button").click(function(){
   									if(arrayid.length>0){
-  										var url_id=window.location.href.substring(30);
+  										var url_id=window.location.href.split('?')[0].substring(30);
   									    var ids={"frameids":arrayid.join(',')};
                                         $.ajax({
                                             type:'POST',
