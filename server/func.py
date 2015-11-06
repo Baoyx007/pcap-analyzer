@@ -3,7 +3,7 @@
 # author: le4f.net
 from scapy.layers.inet import *
 from server import *
-from pyshark_utils import parse_hexdata
+from http_utils import parse_hexdata, decode_chunk_http
 
 
 # 连接数据库
@@ -333,15 +333,21 @@ def get_web(file):
             py_frame = py_cap[i - 1]
             if hasattr(py_frame.tcp, 'analysis_retransmission'):
                 continue
-            if hasattr(py_frame, 'http'):
-                result += '<div class="ui raised segment" id="%d"><p>' % i
-                result += r'id=' + str(i) + r'<br>'
-                result = result + raw.load.replace(' ', '&nbsp;').replace('\n', '<br/>')
-                py_frame.http.pretty_print()
-                if hasattr(py_frame, 'data'):
-                    result += '<br>'
-                    result += parse_hexdata(py_frame.data.tcp_reassembled_data)
-                result += r'''</p></div>  '''
+            if not hasattr(py_frame, 'http'):
+                continue
+            result += '<div class="ui raised segment" id="%d"><p>' % i
+            result += r'id=' + str(i) + r'<br>'
+            # 一个http分成多个TCP帧接收的
+            if hasattr(py_frame, 'data'):
+                result += parse_hexdata(py_frame.data.tcp_reassembled_data).replace(' ', '&nbsp;').replace('\n',
+                                                                                                           '<br/>')
+            # http body中有chunk数据
+            elif hasattr(py_frame.http, 'transfer_encoding'):
+                ziped = True if hasattr(py_frame.http, 'content_encoding') else False
+                result += decode_chunk_http(str(raw.load), ziped).replace(' ', '&nbsp;').replace('\n', '<br/>')
+            else:
+                result += str(raw.load).replace(' ', '&nbsp;').replace('\n', '<br/>')
+            result += r'''</p></div>  '''
     if result == "":
         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
     result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
