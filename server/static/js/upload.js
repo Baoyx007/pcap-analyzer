@@ -5,6 +5,19 @@ $(document).ready(function() {
     $('#upload-nav').addClass('active');
 
     $('.ui.checkbox').checkbox();
+//实现Select City
+    var s={"Shanghai":[121,31],"Nanjing":[118,32]};
+    function cityToStr(text){
+        var arry_ll=s[text].toString().split(',');
+        $("#cityMessage").html("City:"+text+", longitude="+arry_ll[0]+", latitude="+arry_ll[1]);
+    }
+    var text=$("#searchCity").find("option:selected").text();
+        cityToStr(text);
+    $("#searchCity").change(function(){
+        text=$("#searchCity").find("option:selected").text();
+        cityToStr(text);
+    });
+//Select City结束
 
     $('#delete-button').on('click', function(){
         $('.small.del.modal').modal({
@@ -45,11 +58,12 @@ $(document).ready(function() {
     $('#analyze-button').on('click', function(){
         var delCheckbox = $("input[name='checkoption']:checked");
         var size = delCheckbox.size();
+        var arry_ll=s[text].toString().split(',');
         if(size > 0){  
             var params = "";  
             for(var i=0;i<size;i++){
                 param=delCheckbox.eq(i).val();
-                window.open('/analyze/'+param);
+                window.open('/analyze/'+param+'?longitude='+arry_ll[0]+'&latitude='+arry_ll[1]);
                 }
         }
     });
@@ -84,6 +98,12 @@ $(document).ready(function() {
                 $('.small.ok.modal').modal('show');
                 history.go(0);
         },
+    });
+
+//显示手机设备的添加栏
+   $('#addDevice-button').on('click', function(){
+        var div1=document.getElementById('hidden_div');
+        div1.style.display='block';
     });
 
 });
