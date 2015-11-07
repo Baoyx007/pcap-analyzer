@@ -46,7 +46,6 @@ def download(id):
 @app.route('/analyze/<id>', methods=["GET"])
 def analyze(id):
     id = int(id)
-    db = get_connection()
     pcapfile = get_pcap_entries(id)
     file = pcapfile[0]['filename']
     filter = request.args.get('filter')
@@ -57,17 +56,20 @@ def analyze(id):
     dstport = get_port_dst(file)
     # 如生产环境需注意可能存在的XSS
     # pcapstat['mail'] = get_mail(file)
-    pcapstat['web'] = get_web(file)
+    coord_info = request.args
+    pcapstat['web'], marked = get_web(file, coord_info)
     # dns, pcapstat['dnstable'] = get_dns(file)
     pcapstat['ipsrc'] = dict(ipsrc)
     pcapstat['ipdst'] = dict(ipdst)
     pcapstat['dstport'] = dict(dstport)
     # pcapstat['dns'] = dict(dns)
     try:
-        return render_template('analyze.html', pcapfile=pcapfile[0], details=details, pcapstat=pcapstat)
+        return render_template('analyze.html', pcapfile=pcapfile[0], details=details, pcapstat=pcapstat,
+                               marked=marked)
     except:
         details = decode_capture_file(file)
-        return render_template('analyze.html', pcapfile=pcapfile[0], details=details, pcapstat=pcapstat)
+        return render_template('analyze.html', pcapfile=pcapfile[0], details=details, pcapstat=pcapstat,
+                               marked=marked)
 
 
 # 获取包细节
@@ -87,16 +89,15 @@ def packetdetail(id, num):
 # 产生中间配置1
 @app.route('/autogen_1/<id>', methods=['POST'])
 def gen_config_1(id):
-    if request.method == 'POST':
-        frame_ids = request.get_json()['frameids']
-        id = int(id)
-        # TODO 文件可能不存在
-        file = get_pcap_entries(id)[0]['filename']
-        ids_int =[]
-        for id in frame_ids.split(','):
-            ids_int.append(int(id))
-        mid_data_list = gen_config_1_json(file, ids_int)
-        return render_template('gen_1.html', DataList=mid_data_list)
+    frame_ids = request.get_json()['frameids']
+    id = int(id)
+    # TODO 文件可能不存在
+    file = get_pcap_entries(id)[0]['filename']
+    ids_int = []
+    for id in frame_ids.split(','):
+        ids_int.append(int(id))
+    mid_data_list = gen_config_1_json(file, ids_int)
+    return render_template('gen_1.html', DataList=mid_data_list)
 
 
 # 删除包

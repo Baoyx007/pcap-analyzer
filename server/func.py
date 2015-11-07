@@ -4,6 +4,7 @@
 from scapy.layers.inet import *
 from server import *
 from http_utils import parse_hexdata, decode_chunk_http
+from regex_util import RegexUtil
 
 
 # 连接数据库
@@ -316,8 +317,10 @@ def get_mail(file):
 
 
 # Web数据包提取
-def get_web(file):
+def get_web(file, coord_info):
     result = ""
+    mark_frame = list()
+    myre = RegexUtil(coord_info)
     pcap = rdpcap(UPLOAD_FOLDER + file)
     py_cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, file))
     i = 0
@@ -335,20 +338,25 @@ def get_web(file):
                 continue
             if not hasattr(py_frame, 'http'):
                 continue
-            result += '<div class="ui raised segment" id="%d"><p>' % i
-            result += r'id=' + str(i) + r'<br>'
+            temp_result = ''
+            temp_result += '<div class="ui raised segment" id="%d"><p>' % i
+            temp_result += r'id=' + str(i) + r'<br>'
             # 一个http分成多个TCP帧接收的
             if hasattr(py_frame, 'data'):
-                result += parse_hexdata(py_frame.data.tcp_reassembled_data).replace(' ', '&nbsp;').replace('\n',
-                                                                                                           '<br/>')
+                temp_result += parse_hexdata(py_frame.data.tcp_reassembled_data).replace(' ', '&nbsp;').replace('\n',
+                                                                                                                '<br/>')
             # http body中有chunk数据
             elif hasattr(py_frame.http, 'transfer_encoding'):
                 ziped = True if hasattr(py_frame.http, 'content_encoding') else False
-                result += decode_chunk_http(str(raw.load), ziped).replace(' ', '&nbsp;').replace('\n', '<br/>')
+                temp_result += decode_chunk_http(str(raw.load), ziped).replace(' ', '&nbsp;').replace('\n', '<br/>')
             else:
-                result += str(raw.load).replace(' ', '&nbsp;').replace('\n', '<br/>')
-            result += r'''</p></div>  '''
+                temp_result += str(raw.load).replace(' ', '&nbsp;').replace('\n', '<br/>')
+            temp_result += r'''</p></div>  '''
+            if myre.match_lng_and_lat(temp_result):
+                mark_frame.append(i)
+            result += temp_result
     if result == "":
         result = '''<div class="ui vertical segment"><p>No WebView Packets!</p></div>'''
-    result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
-    return result
+    # result = re.compile('[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f\\x80-\\xff]').sub('', result)
+    # print(mark_frame)
+    return unicode(result, 'utf-8', errors='ignore'),mark_frame
