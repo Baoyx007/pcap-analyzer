@@ -5,7 +5,7 @@ $(document).ready(function() {
     $('#upload-nav').addClass('active');
 
     $('.ui.checkbox').checkbox();
-//实现Select City
+//瀹炵幇Select City
     var s={"Shanghai":[121,31],"Nanjing":[118,32]};
     function cityToStr(text){
         var arry_ll=s[text].toString().split(',');
@@ -17,7 +17,7 @@ $(document).ready(function() {
         text=$("#searchCity").find("option:selected").text();
         cityToStr(text);
     });
-//Select City结束
+//Select City缁撴潫
 
     $('#delete-button').on('click', function(){
         $('.small.del.modal').modal({
@@ -100,10 +100,18 @@ $(document).ready(function() {
         },
     });
 
-//显示手机设备的添加栏
+//娣诲姞鎵嬫満璁惧淇℃伅
    $('#addDevice-button').on('click', function(){
-        var div1=document.getElementById('hidden_div');
-        div1.style.display='block';
+       $('#addDevice-ok').modal({
+            closable  : true,
+            allowMultiple: false,
+            onDeny    : function(){
+                return true;
+            },
+            onApprove : function() {
+                alert("submit");
+            }
+        }).modal('show');
     });
 
 });

@@ -118,56 +118,36 @@
 	      </div>
 	    </div>
 	</div>
-
-
-	</div>
-	</div>
-
-	<!--column2-->
-	<div class="ui five wide column">
-	<div class="ui segment">
-	  	<div class="field">
-		<h5 class="ui dividing header">Upload Pcap File</h5>
-		<span class="fluid ui black button fileinput-button"><i class="cloud upload icon"></i>Upload
-		<input id='fileupload' type="file" name="pcapfile" data-url="/upload">
-		</span>
-		<br/>
-		<div id="upprogress" class="ui green file progress">
-		  <div class="progress">
-		    <div class="bar"></div>
-		  </div>
-		  <div class="label" id='progresslabel'></div>
-		</div>
-	  </div>
-		<div class="ui segment" id="hidden_div" style="display:none">
+	<div class="ui small ok modal " id='addDevice-ok'>
+		<div class="ui segment" id="hidden_div">
 			<h5 class="ui dividing header">Add Your Device</h5>
 			<form class="ui form segment">
 				<div class="fields">
 					<div ></div>
 					<div class="field" id="field_id">
 						<label>device_id</label>
-						<input type="text" name="id">
-						<div class="ui error message right" id="error_id" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
+						<input type="text" size="42" name="id">
+						<div class="ui error message" id="error_id" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
-					<div class="field" id="field_name">
+					<div class="field"  id="field_name">
 						<label>device_name</label>
-						<input type="text" name="name">
-						<div class="ui error message right" id="error_name" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
+						<input type="text" size="42" name="name">
+						<div class="ui error message" id="error_name" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 					<div class="field" id="field_imei">
 						<label>device_imei</label>
-						<input type="text" name="imei">
-						<div class="ui error message right" id="error_imei" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
+						<input type="text" size="42" name="imei">
+						<div class="ui error message" id="error_imei" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 					<div class="field" id="field_os">
 						<label>device_os</label>
-						<input type="text" name="os">
-						<div class="ui error message right" id="error_os" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
+						<input type="text" size="42" name="os">
+						<div class="ui error message" id="error_os" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 					<div class="field" id="field_serialNumber">
 						<label>device_SerialNumber</label>
-						<input type="text" name="serialNumber">
-						<div class="ui error message right" id="error_serialNumber" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
+						<input type="text" size="42" name="serialNumber">
+						<div class="ui error message" id="error_serialNumber" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 				</div>
 			<script>
@@ -229,9 +209,39 @@
 
 			</script>
 			</form>
-			<div class="ui blue button">Submit</div>
 
 		</div>
+
+	    <div class="actions">
+	      <div class="ui negative button">
+	        No
+	      </div>
+	      <div class="ui positive right labeled icon button">
+	        Yes
+	        <i class="checkmark icon"></i>
+	      </div>
+	    </div>
+	</div>
+
+	</div>
+	</div>
+
+	<!--column2-->
+	<div class="ui five wide column">
+	<div class="ui segment">
+	  	<div class="field">
+		<h5 class="ui dividing header">Upload Pcap File</h5>
+		<span class="fluid ui black button fileinput-button"><i class="cloud upload icon"></i>Upload
+		<input id='fileupload' type="file" name="pcapfile" data-url="/upload">
+		</span>
+		<br/>
+		<div id="upprogress" class="ui green file progress">
+		  <div class="progress">
+		    <div class="bar"></div>
+		  </div>
+		  <div class="label" id='progresslabel'></div>
+		</div>
+	  </div>
 	</div>
 
 	</div>
