@@ -1,4 +1,39 @@
-<div>
-    {{DataList}}
-</div>
+{% extends "base.html" %}
+{% block content %}
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Information</title>
+    </head>
+    <body>
+        <div class="ui twenty wide column">
+    	    <div class="ui segment">
+		        <table class="ui black celled table">
+                      <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>HOST</th>
+                            <th>TYPE</th>
+                            <th>METHOD</th>
+                            <th>NAME</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for data in DataList %}
+                        <tr>
+                            <td>{{data['URL']}}</td>
+                            <td>{{data['HOST']}}</td>
+                            <td>{{data['TYPE']}}</td>
+                            <td>{{data['METHOD']}}</td>
+                            <td>{{data['NAME']}}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
 
+		        </table>
+	        </div>
+	    </div>
+    </body>
+
+</html>
+{% endblock %}
