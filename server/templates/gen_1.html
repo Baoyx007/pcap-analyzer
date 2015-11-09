@@ -4,6 +4,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Information</title>
+
     </head>
     <body>
         <div class="ui twenty wide column">
@@ -21,7 +22,7 @@
                       <tbody>
                       {% for data in DataList %}
                         <tr>
-                            <td>{{data['URL']}}</td>
+                            <td height="50px">{{data['URL']}}</td>
                             <td>{{data['HOST']}}</td>
                             <td>{{data['TYPE']}}</td>
                             <td>{{data['METHOD']}}</td>
@@ -36,4 +37,5 @@
     </body>
 
 </html>
+
 {% endblock %}
