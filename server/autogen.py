@@ -27,8 +27,9 @@ def gen_config_1_json(pcapfile, frame_ids):
 
         data_list.append(mid_data)
 
-    import json
-    return json.dumps(data_list)
+    # import json
+    # return json.dumps(data_list)
+    return data_list
 
 
 def extract_mid_data(package):

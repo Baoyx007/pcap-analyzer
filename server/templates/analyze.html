@@ -217,7 +217,26 @@
         <a class="ui red ribbon label">Web Packets</a>
         <script>
             $(document).ready(function () {
-//                var arrayid = new Array();
+                function getId(num,array){
+                    for(var i=0;i<array.length;i++)
+                    {
+                        if(array[i]==num)
+                            return i;
+                    }
+                    return -1;
+                }
+                var newWindow;
+                function makeNewWindow(){
+                    newWindow = window.open("/");
+                  }
+                  function subWrite(content){
+                    if(newWindow.closed){
+                      makeNewWindow();
+                    }
+                    newWindow.focus();
+                    newWindow.document.write(content);
+                    newWindow.document.close();
+                  }
                 var arrayid = {{marked|safe}}
                 for (var i=0;i<arrayid.length;i++)
                 {
@@ -225,7 +244,8 @@
                 }
                 $("div.ui.raised.segment").click(function () {
                     var id = $(this).attr("id");
-                    var segment_id = jQuery.inArray(id, arrayid);
+                    <!--var segment_id = $.inArray(id, arrayid);-->
+                    var segment_id =getId(id,arrayid);
                     if (segment_id == -1) {
                         if (!isNaN(id))
                             arrayid.push(id);
@@ -239,18 +259,27 @@
                     if (arrayid.length > 0) {
                         var url_id = window.location.href.split('?')[0].substring(30);
                         var ids = {"frameids": arrayid.join(',')};
+                        var isSuccess=false;
+                        var content;
                         $.ajax({
                             type: 'POST',
+                            async: false,
                             contentType: 'application/json; charset=utf-8',
                             url: '/autogen_1/' + url_id,
                             data: $.toJSON(ids),
                             success: function (response) {
-                                document.open(response);
+                                isSuccess=true;
+                                content=response;
                             }
                         });
+                        if(isSuccess==true)
+                        {
+                            makeNewWindow();
+                            subWrite(content);
+                        }
                     }
                     else {
-                        alert("Nothing");
+                        alert("Nothing has been selected!");
                     }
                 });
             });
