@@ -2,6 +2,7 @@
 import os
 import pyshark
 from server import UPLOAD_FOLDER
+import re
 
 __author__ = 'PCPC'
 
@@ -39,3 +40,25 @@ def extract_mid_data(package):
     mid_data['METHOD'] = package.http.request_method
     mid_data['NAME'] = package.http.host
     return mid_data
+
+
+def read_pair(path):
+    pairs = [os.path.join(path, x) for x in os.listdir(path) if os.path.isfile(os.path.join('.', path, x))]
+    pairs.sort(cmp=lambda x, y: cmp(os.path.getctime(x), os.path.getctime(y)), reverse=True)
+    for i in range(0, len(pairs), 2):
+        # print(pairs[i],pairs[i+1])
+        frame = dict()
+        with open(pairs[i]) as f:
+            req = f.read().split('\n\n', 1)
+            frame['req_h'] = req[0]
+            if len(req) > 1:
+                frame['req_b'] = req[1]
+        with open(pairs[i + 1]) as f:
+            res = f.read().split('\n\n', 1)
+            frame['res_h'] = res[0]
+            if len(res) > 1:
+                frame['res_b'] = res[1]
+    # p = re.compile(r'\n')
+    # for k in frame.keys():
+    #     frame[k] = p.sub(r'<br>', frame[k])
+    return frame
