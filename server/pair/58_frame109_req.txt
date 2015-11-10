@@ -1,0 +1,24 @@
+GET /api/log/api/unity/locate?lotid=121.409919&latid=31.233965&version=1&type=2&platform=1 HTTP/1.1
+Connection: Keep-Alive
+Host: app.58.com
+Accept-Encoding: gzip,deflate
+imei: 863777021032460
+uuid: 548e2859-1e54-4f45-b747-0e185016eeb5
+productorid: 1
+ua: Coolpad 8297_4.4
+platform: android
+version: 6.0.8.0
+osv: 4.4.2
+channelid: 279
+apn: WIFI
+cid: 2
+tn: 
+uid: 
+brand: Coolpad
+m: 18:dc:56:f0:55:ba
+PPU: 
+netType: wifi
+bangbangid: 
+lat: 31.233965
+lon: 121.409919
+id58: 91213540448285

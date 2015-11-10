@@ -35,8 +35,6 @@ def upload():
 # 下载
 @app.route('/download/<id>', methods=['GET'])
 def download(id):
-    id = int(id)
-    db = get_connection()
     pcapfile = get_pcap_entries()
     file = pcapfile[0]['filename']
     return send_file("../" + UPLOAD_FOLDER + file, attachment_filename=file, as_attachment=True)
@@ -76,7 +74,6 @@ def analyze(id):
 @app.route('/packetdetail/<id>/<num>', methods=["GET"])
 def packetdetail(id, num):
     id = int(id)
-    # db = get_connection()
     pcapfile = get_pcap_entries(id)
     file = pcapfile[0]['filename']
     try:
@@ -98,6 +95,15 @@ def gen_config_1(id):
         ids_int.append(int(id))
     mid_data_list = gen_config_1_json(file, ids_int)
     return render_template('gen_1.html', DataList=mid_data_list)
+
+
+# 产生中间配置2
+@app.route('/autogen_2/<id>', methods=['GET'])
+def gen_config_2(id):
+    # 遍历所有产生的请求对
+    # cookie 记录遍历到第几对
+    pair = read_pair('server/pair')
+    return render_template('gen_2.html', frame=pair)
 
 
 # 删除包

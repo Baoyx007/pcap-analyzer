@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>配置2分析</title>
+</head>
+<body>
+<div class="ui segments">
+    <div class="ui segment">
+        <p>request header</p>
+        {{frame['req_h']}}
+    </div>
+    <div class="ui segment">
+        <p>Request Body</p>
+        {{frame['req_b']}}
+    </div>
+    <div class="ui segment">
+        <p>Response Header</p>
+        {{frame['res_h']}}
+    </div>
+    <div class="ui segment">
+        <p>Response Body</p>
+        {{frame['res_b']}}
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}
