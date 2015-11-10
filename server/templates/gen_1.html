@@ -4,7 +4,11 @@
     <head>
         <meta charset="utf-8" />
         <title>Information</title>
-
+        <script>
+            $(document).ready(function(){
+                $('#body_color tr:even').css('background-color','#dddddd');
+            });
+        </script>
     </head>
     <body>
         <div class="ui twenty wide column">
@@ -19,7 +23,7 @@
                             <th>NAME</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="body_color">
                       {% for data in DataList %}
                         <tr>
                             <td height="50px">{{data['URL']}}</td>
@@ -35,7 +39,23 @@
 	        </div>
 	    </div>
     </body>
-
+    <foot>
+        <div class="ui steps">
+          <a class="active step">
+            <i class="truck icon blue"></i>
+            <div class="content">
+              <div class="title">Shipping</div>
+              <div class="description">Choose your shipping options</div>
+            </div>
+          </a>
+          <a class="step">
+            <div class="content">
+              <div class="title">Billing</div>
+              <div class="description">Enter billing information</div>
+            </div>
+          </a>
+        </div>
+    </foot>
 </html>
 
 {% endblock %}
