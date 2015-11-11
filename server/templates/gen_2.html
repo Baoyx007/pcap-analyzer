@@ -6,20 +6,24 @@
     <title>配置2分析</title>
 </head>
 <body>
-<div class="ui segments">
+<div class="ui segments" id="segment_one">
     <div class="ui segment">
         <p>request header</p>
-        {% for line in frame['req_h'].split('\n')  %}
-            {{line}}<br>
+        {% for req in frame['req_h'].split('\n')%}
+            {{req}}
+            <br>
         {% endfor %}
     </div>
     <div class="ui segment">
         <p>Request Body</p>
-        {{frame['req_b']}}
+        {{ frame['req_b']}}
     </div>
     <div class="ui segment">
         <p>Response Header</p>
-        {{frame['res_h']}}
+        {% for req in frame['res_h'].split('\n')%}
+            {{req}}
+            <br>
+        {% endfor %}
     </div>
     <div class="ui segment">
         <p>Response Body</p>
