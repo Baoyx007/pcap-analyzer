@@ -3,6 +3,7 @@ import os
 import pyshark
 from server import UPLOAD_FOLDER
 import re
+import codecs
 
 __author__ = 'PCPC'
 
@@ -43,8 +44,12 @@ def extract_mid_data(package):
 
 
 def read_pair(path):
+    # 将所有的中间pair按时间顺序排序
+    # 这样相邻两个pair为一个请求对
     pairs = [os.path.join(path, x) for x in os.listdir(path) if os.path.isfile(os.path.join('.', path, x))]
     pairs.sort(cmp=lambda x, y: cmp(os.path.getctime(x), os.path.getctime(y)), reverse=True)
+    # 每个frame分为4个部分request_head,request_body,response_head,response_body
+    frame_list = list()
     for i in range(0, len(pairs), 2):
         # print(pairs[i],pairs[i+1])
         frame = dict()
@@ -58,7 +63,8 @@ def read_pair(path):
             frame['res_h'] = res[0]
             if len(res) > 1:
                 frame['res_b'] = res[1]
+        frame_list.append(frame)
     # p = re.compile(r'\n')
     # for k in frame.keys():
     #     frame[k] = p.sub(r'<br>', frame[k])
-    return frame
+    return frame_list

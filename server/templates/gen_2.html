@@ -9,7 +9,9 @@
 <div class="ui segments">
     <div class="ui segment">
         <p>request header</p>
-        {{frame['req_h']}}
+        {% for line in frame['req_h'].split('\n')  %}
+            {{line}}<br>
+        {% endfor %}
     </div>
     <div class="ui segment">
         <p>Request Body</p>
@@ -21,7 +23,7 @@
     </div>
     <div class="ui segment">
         <p>Response Body</p>
-        {{frame['res_b']}}
+        {{frame['res_b'].decode('utf8')}}
     </div>
 </div>
 </body>

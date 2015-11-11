@@ -9,7 +9,7 @@ from regex_util import RegexUtil
 
 # 连接数据库
 def connect_db():
-    return sqlite3.connect(DATABASE)
+    return sqlite3.connect(app.config['DATABASE'])
 
 
 # 获取数据库连接
