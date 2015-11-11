@@ -6,18 +6,24 @@
     <title>配置2分析</title>
 </head>
 <body>
-<div class="ui segments">
+<div class="ui segments" id="segment_one">
     <div class="ui segment">
         <p>request header</p>
-        {{frame['req_h']}}
+        {% for req in frame['req_h'].split('\n')%}
+            {{req}}
+            <br>
+        {% endfor %}
     </div>
     <div class="ui segment">
         <p>Request Body</p>
-        {{frame['req_b']}}
+        {{ frame['req_b']}}
     </div>
     <div class="ui segment">
         <p>Response Header</p>
-        {{frame['res_h']}}
+        {% for req in frame['res_h'].split('\n')%}
+            {{req}}
+            <br>
+        {% endfor %}
     </div>
     <div class="ui segment">
         <p>Response Body</p>
@@ -26,4 +32,82 @@
 </div>
 </body>
 </html>
+
+    <div class="ui vertical menu">
+  <a class="item">
+    Home
+  </a>
+  <div class="ui left pointing dropdown link item">
+    <i class="dropdown icon"></i>
+    Messages
+    <div class="menu">
+      <div class="item">Inbox</div>
+      <div class="item">Starred</div>
+      <div class="item">Sent Mail</div>
+      <div class="item">Drafts (143)</div>
+      <div class="divider"></div>
+      <div class="item">Spam (1009)</div>
+      <div class="item">Trash</div>
+    </div>
+  </div>
+  <a class="item">
+    Browse
+  </a>
+  <a class="item">
+    Help
+  </a>
+</div>
+<script>
+    <!--function getSelect()-->
+    <!--{-->
+        <!--if(window.getSelection)-->
+        <!--{-->
+            <!--alert(window.getSelection());-->
+        <!--}-->
+        <!--else-->
+        <!--{-->
+            <!--alert(document.selection.createRange().text);-->
+        <!--}-->
+    <!--}-->
+
+    <!--$('#segment_one div').mouseup(function() {-->
+        <!--getSelect();-->
+    <!--});-->
+
+
+    var $sinaMiniBlogShare = function(eleShare, eleContainer) {
+	var eleTitle = document.getElementsByTagName("title")[0];
+	eleContainer = eleContainer || document;
+	var funGetSelectTxt = function() {
+		var txt = "";
+		if(document.selection) {
+			txt = document.selection.createRange().text;	// IE
+		} else {
+			txt = document.getSelection();
+		}
+		return txt.toString();
+	};
+	eleContainer.onmouseup = function(e) {
+		e = e || window.event;
+		var txt = funGetSelectTxt(), sh = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+		var left = (e.clientX - 40 < 0) ? e.clientX + 20 : e.clientX - 40, top = (e.clientY - 40 < 0) ? e.clientY + sh + 20 : e.clientY + sh - 40;
+		if (txt) {
+			eleShare.style.display = "inline";
+			eleShare.style.left = left + "px";
+			eleShare.style.top = top + "px";
+		} else {
+			eleShare.style.display = "none";
+		}
+	};
+	eleShare.onclick = function() {
+		var txt = funGetSelectTxt(), title = (eleTitle && eleTitle.innerHTML)? eleTitle.innerHTML : "aa";
+		if (txt) {
+			window.open('http://v.t.sina.com.cn/share/share.php?title=' + txt + 'aa"' + title + '"aa&url=' + window.location.href);
+		}
+	    };
+    };
+
+
+    $sinaMiniBlogShare(document.getElementById("imgSinaShare"),$('#segment_one div'));
+<!--</script>-->
 {% endblock %}

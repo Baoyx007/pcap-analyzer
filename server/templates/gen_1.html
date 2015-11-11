@@ -38,24 +38,36 @@
 		        </table>
 	        </div>
 	    </div>
-    </body>
-    <foot>
-        <div class="ui steps">
-          <a class="active step">
-            <i class="truck icon blue"></i>
-            <div class="content">
-              <div class="title">Shipping</div>
-              <div class="description">Choose your shipping options</div>
-            </div>
-          </a>
-          <a class="step">
-            <div class="content">
-              <div class="title">Billing</div>
-              <div class="description">Enter billing information</div>
-            </div>
-          </a>
+        <br>
+        <div class="ui red small right floated button" id="send_gen_2">
+            <i class="send icon"></i>Send
         </div>
-    </foot>
+    </body>
+
+
+        <!--<div class="ui steps">-->
+          <!--<a class="active step">-->
+            <!--<i class="truck icon blue"></i>-->
+            <!--<div class="content">-->
+              <!--<div class="title">Shipping</div>-->
+              <!--<div class="description">Choose your shipping options</div>-->
+            <!--</div>-->
+          <!--</a>-->
+          <!--<a class="step">-->
+            <!--<div class="content">-->
+              <!--<div class="title">Billing</div>-->
+              <!--<div class="description">Enter billing information</div>-->
+            <!--</div>-->
+          <!--</a>-->
+        <!--</div>-->
+
 </html>
 
+<script>
+    $(document).ready(function(){
+        $('#send_gen_2').on('click', function(){
+            window.open('/autogen_2/6');
+        });
+    });
+</script>
 {% endblock %}
