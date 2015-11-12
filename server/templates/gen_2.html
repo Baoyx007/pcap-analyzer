@@ -6,30 +6,104 @@
     <title>配置2分析</title>
 </head>
 <body>
-<div class="ui segments" id="segment_one">
-    <div class="ui segment">
-        <p>request header</p>
-        {% for req in frame['req_h'].split('\n')%}
-            {{req}}
-            <br>
-        {% endfor %}
+    <div class="ui two column fitted stackable grid">
+        <div class="ui eleven wide column">
+            <div class="ui segments" id="segment_one">
+                <div class="ui segment">
+                    <p>request header</p>
+                    {% for req in frame['req_h'].split('\n')%}
+                        {{req}}
+                        <br>
+                    {% endfor %}
+                </div>
+                <div class="ui segment">
+                    <p>Request Body</p>
+                    {{ frame['req_b']}}
+                </div>
+                <div class="ui segment">
+                    <p>Response Header</p>
+                    {% for req in frame['res_h'].split('\n')%}
+                        {{req}}
+                        <br>
+                    {% endfor %}
+                </div>
+                <div class="ui segment">
+                    <p>Response Body</p>
+                    {{frame['res_b']}}
+                </div>
+            </div>
+        </div>
+        <div class="ui five wide column">
+            <div class="ui vertical menu">
+                  <a class="item">
+                    Home
+                  </a>
+                  <div class="ui left pointing dropdown link item">
+                    <i class="dropdown icon"></i>
+                    Messages
+                    <div class="menu">
+                      <div class="item">Inbox</div>
+                      <div class="item">Starred</div>
+                      <div class="item">Sent Mail</div>
+                      <div class="item">Drafts (143)</div>
+                      <div class="divider"></div>
+                      <div class="item">Spam (1009)</div>
+                      <div class="item">Trash</div>
+                    </div>
+                  </div>
+                  <a class="item">
+                    Browse
+                  </a>
+                  <a class="item">
+                    Help
+                  </a>
+            </div>
+            <div class="ui button">Show flowing popup</div>
+
+        </div>
     </div>
-    <div class="ui segment">
-        <p>Request Body</p>
-        {{ frame['req_b']}}
-    </div>
-    <div class="ui segment">
-        <p>Response Header</p>
-        {% for req in frame['res_h'].split('\n')%}
-            {{req}}
-            <br>
-        {% endfor %}
-    </div>
-    <div class="ui segment">
-        <p>Response Body</p>
-        {{frame['res_b'].decode('utf8')}}
-    </div>
-</div>
+    <div class="ui flowing popup bottom left transition hidden" id="hide">
+                    <div class="column">
+                      <h4 class="ui header">Basic Plan</h4>
+                      <p><b>2</b> projects, $10 a month</p>
+                      <div class="ui button">Choose</div>
+
+                  </div>
+            </div>
 </body>
 </html>
+
+
+<script>
+$(document).ready(function() {
+    function getSelect()
+    {
+        if(document.selection)
+        {
+        }
+        else
+        {
+        }
+    }
+    $(document).on("contextmenu","#segment_one div",function(e){
+        if(typeof e.preventDefault === "function"){
+                e.preventDefault();
+                e.stopPropagation();
+        }else{
+                e.returnValue = false;
+                e.cancelBubble = true;
+        }
+        $("#hide").removeClass('hidden');
+        $("#hide").css({"left":e.clientX-140,"top":e.clientY-70}).fadeIn();
+        $("#hide").css({"width":200}).fadeIn();
+    });
+    $('#segment_one div').on("click",function(e){
+        if(!$('#hide').is('.hidden'))
+        {
+            $("#hide").addClass('hidden');
+        }
+        });
+
+});
+<!--</script>-->
 {% endblock %}
