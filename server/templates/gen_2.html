@@ -6,34 +6,6 @@
     <title>配置2分析</title>
 </head>
 <body>
-<<<<<<< Temporary merge branch 1
-<div class="ui segments" id="segment_one">
-    <div class="ui segment">
-        <p>request header</p>
-        {% for req in frame['req_h'].split('\n')%}
-            {{req}}
-            <br>
-        {% endfor %}
-    </div>
-    <div class="ui segment">
-        <p>Request Body</p>
-        {{ frame['req_b']}}
-    </div>
-    <div class="ui segment">
-        <p>Response Header</p>
-        {% for req in frame['res_h'].split('\n')%}
-            {{req}}
-            <br>
-        {% endfor %}
-    </div>
-    <div class="ui segment">
-        <p>Response Body</p>
-        {{frame['res_b'].decode('utf8')}}
-    </div>
-</div>
-</body>
-</html>
-=======
     <div class="ui two column fitted stackable grid">
         <div class="ui eleven wide column">
             <div class="ui segments" id="segment_one">
@@ -46,7 +18,7 @@
                 </div>
                 <div class="ui segment">
                     <p>Request Body</p>
-                    {{ frame['req_b']}}
+                    {{ frame['req_b'].decode('utf8')}}
                 </div>
                 <div class="ui segment">
                     <p>Response Header</p>
@@ -57,7 +29,7 @@
                 </div>
                 <div class="ui segment">
                     <p>Response Body</p>
-                    {{frame['res_b']}}
+                    {{frame['res_b'].decode('utf8')}}
                 </div>
             </div>
         </div>
@@ -133,6 +105,5 @@ $(document).ready(function() {
         });
 
 });
-<!--</script>-->
->>>>>>> Temporary merge branch 2
+</script>
 {% endblock %}
