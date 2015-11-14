@@ -5,64 +5,79 @@
     <meta charset="UTF-8">
     <title>配置2分析</title>
 </head>
-<body>
+<body >
+    <meta charset="UTF-8">
     <div class="ui two column fitted stackable grid">
         <div class="ui eleven wide column">
+            <a class="ui black ribbon label">Packets Details</a>
             <div class="ui segments" id="segment_one">
                 <div class="ui segment">
                     <p>request header</p>
-                    {% for req in frame['req_h'].split('\n')%}
+                    <p id="request_h">
+                        {% for req in frame[0]['req_h'].split('\n')%}
                         {{req}}
                         <br>
-                    {% endfor %}
+                        {% endfor %}
+                    </p>
                 </div>
                 <div class="ui segment">
                     <p>Request Body</p>
-                    {{ frame['req_b'].decode('utf8')}}
+                    <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
                 </div>
                 <div class="ui segment">
                     <p>Response Header</p>
-                    {% for req in frame['res_h'].split('\n')%}
+                    <p id="response_h">
+                    {% for req in frame[0]['res_h'].split('\n')%}
                         {{req}}
                         <br>
                     {% endfor %}
+                    </p>
                 </div>
                 <div class="ui segment">
                     <p>Response Body</p>
-                    {{frame['res_b'].decode('utf8')}}
+                    <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
                 </div>
+            </div>
+            <br>
+            <div class="ui buttons">
+              <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
+              <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
             </div>
         </div>
         <div class="ui five wide column">
-            <div class="ui vertical menu">
-                  <a class="item">
-                    Home
-                  </a>
-                  <div class="ui left pointing dropdown link item">
-                    <i class="dropdown icon"></i>
-                    Messages
-                    <div class="menu">
-                      <div class="item">Inbox</div>
-                      <div class="item">Starred</div>
-                      <div class="item">Sent Mail</div>
-                      <div class="item">Drafts (143)</div>
-                      <div class="divider"></div>
-                      <div class="item">Spam (1009)</div>
-                      <div class="item">Trash</div>
-                    </div>
-                  </div>
-                  <a class="item">
-                    Browse
-                  </a>
-                  <a class="item">
-                    Help
-                  </a>
+            <div class="ui segment">
+                <a class="ui black ribbon label">Packets Stat</a>
+                 <div class="ui vertical menu">
+                      <a class="item">
+                        Home
+                      </a>
+                      <div class="ui left pointing dropdown link item">
+                        <i class="dropdown icon"></i>
+                        Messages
+                        <div class="menu">
+                          <div class="item">Inbox</div>
+                          <div class="item">Starred</div>
+                          <div class="item">Sent Mail</div>
+                          <div class="item">Drafts (143)</div>
+                          <div class="divider"></div>
+                          <div class="item">Spam (1009)</div>
+                          <div class="item">Trash</div>
+                        </div>
+                      </div>
+                      <a class="item">
+                        Browse
+                      </a>
+                      <a class="item">
+                        Help
+                      </a>
             </div>
-            <div class="ui button">Show flowing popup</div>
+                <div class="ui button">Show flowing popup</div>
+            </div>
+
 
         </div>
     </div>
-    <div class="ui flowing popup bottom left transition hidden" id="hide">
+    <div class="ui flowing popup bottom left transition" id="hide">
                     <div class="column">
                       <h4 class="ui header">Basic Plan</h4>
                       <p><b>2</b> projects, $10 a month</p>
@@ -74,16 +89,40 @@
 </html>
 
 
-<script>
+<script >
 $(document).ready(function() {
+    var frame = {{frame|safe}};
+    var res_b=new Array();
+    {% for f in frame%}
+        res_b.push("{{f['res_b'].decode('utf8')}}");
+    {% endfor %}
+    var req_b=new Array();
+    {% for f in frame%}
+        req_b.push("{{f['req_b'].decode('utf8')}}");
+    {% endfor %}
+    var size=frame.length;
+    var i=0;
     function getSelect()
     {
-        if(document.selection)
+        if(window.getSelection)
         {
+            var t=window.getSelection();
+            return t;
         }
         else
         {
+            var t=document.selection.createRange().text;
+            return t;
         }
+    }
+    function getSplit(text){
+        var array=text.split('\n');
+        var str="";
+        for(var j=0;j<array.length;j++)
+        {
+            str+=array[j]+"<br>"
+        }
+        return str;
     }
     $(document).on("contextmenu","#segment_one div",function(e){
         if(typeof e.preventDefault === "function"){
@@ -103,7 +142,31 @@ $(document).ready(function() {
             $("#hide").addClass('hidden');
         }
         });
+    $('#back').on("click",function(){
+        if(i-1>=0)
+        {
+            i=i-1;
+            $('#request_h').html(getSplit(frame[i]['req_h']));
+            $('#request_b').html(req_b[i]);
+            $('#response_h').html(getSplit(frame[i]['res_h']));
+            $('#response_b').html(res_b[i]);
+        }else{
+            alert("This is the first!");
+        }
+    });
 
+    $('#forward').on("click",function(){
+        if(i+1<size)
+        {
+            i=i+1;
+            $('#request_h').html(getSplit(frame[i]['req_h']));
+            $('#request_b').html(req_b[i]);
+            $('#response_h').html(getSplit(frame[i]['res_h']));
+            $('#response_b').html(res_b[i]);
+        }else{
+            alert("This is the last!");
+        }
+    });
 });
 </script>
 {% endblock %}
