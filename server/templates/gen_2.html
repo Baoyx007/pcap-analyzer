@@ -9,81 +9,106 @@
     <meta charset="UTF-8">
     <div class="ui two column fitted stackable grid">
         <div class="ui eleven wide column">
-            <a class="ui black ribbon label">Packets Details</a>
-            <div class="ui segments" id="segment_one">
-                <div class="ui segment">
-                    <p>request header</p>
-                    <p id="request_h">
-                        {% for req in frame[0]['req_h'].split('\n')%}
-                        {{req}}
-                        <br>
+            <div class="ui segment">
+                <a class="ui orange ribbon label"  style="bottom:10px;">Packets Details</a>
+                <div class="ui segments" id="segment_one">
+                    <div class="ui segment">
+                        <p>request header</p>
+                        <p id="request_h">
+                            {% for req in frame[0]['req_h'].split('\n')%}
+                            {{req}}
+                            <br>
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <div class="ui segment">
+                        <p>Request Body</p>
+                        <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
+                    </div>
+                    <div class="ui segment">
+                        <p>Response Header</p>
+                        <p id="response_h">
+                        {% for req in frame[0]['res_h'].split('\n')%}
+                            {{req}}
+                            <br>
                         {% endfor %}
-                    </p>
+                        </p>
+                    </div>
+                    <div class="ui segment">
+                        <p>Response Body</p>
+                        <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
+                    </div>
                 </div>
-                <div class="ui segment">
-                    <p>Request Body</p>
-                    <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
+                <br>
+                <div class="ui buttons">
+                  <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
+                  <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
                 </div>
-                <div class="ui segment">
-                    <p>Response Header</p>
-                    <p id="response_h">
-                    {% for req in frame[0]['res_h'].split('\n')%}
-                        {{req}}
-                        <br>
-                    {% endfor %}
-                    </p>
-                </div>
-                <div class="ui segment">
-                    <p>Response Body</p>
-                    <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
-                </div>
-            </div>
-            <br>
-            <div class="ui buttons">
-              <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
-              <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
             </div>
         </div>
         <div class="ui five wide column">
             <div class="ui segment">
-                <a class="ui black ribbon label">Packets Stat</a>
-                 <div class="ui vertical menu">
-                      <a class="item">
-                        Home
-                      </a>
-                      <div class="ui left pointing dropdown link item">
-                        <i class="dropdown icon"></i>
-                        Messages
-                        <div class="menu">
-                          <div class="item">Inbox</div>
-                          <div class="item">Starred</div>
-                          <div class="item">Sent Mail</div>
-                          <div class="item">Drafts (143)</div>
-                          <div class="divider"></div>
-                          <div class="item">Spam (1009)</div>
-                          <div class="item">Trash</div>
-                        </div>
-                      </div>
-                      <a class="item">
-                        Browse
-                      </a>
-                      <a class="item">
-                        Help
-                      </a>
+                 <a class="ui orange ribbon label"  style="bottom:10px;">Packets Details</a>
+                 <div class="ui attached segment">
+                     <p>这个分段在顶部</p>
+                 </div>
+                <div class="ui attached segment">
+                    <p>此段落附加在两边</p>
+                </div>
+                <div class="ui attached segment">
+                    <p>这个分段在底部</p>
+                </div>
+                <table class="ui striped table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Date Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>约翰·莉丽亚</td>
+                      <td>2013年9月14日</td>
+                    </tr>
+                    <tr>
+                      <td>杰米·哈灵顿</td>
+                      <td>2014年1月11日</td>
+                    </tr>
+                    <tr>
+                      <td>吉尔·刘易斯</td>
+                      <td>2014年5月11日</td>
+                    </tr>
+                    <tr>
+                      <td>约翰·莉丽亚</td>
+                      <td>2013年9月14日</td>
+                    </tr>
+                    <tr>
+                      <td>约翰·莉丽亚</td>
+                      <td>2013年9月14日</td>
+                    </tr>
+                    <tr>
+                      <td>杰米·哈灵顿</td>
+                      <td>2014年1月11日</td>
+                    </tr>
+                    <tr>
+                      <td>吉尔·刘易斯</td>
+                      <td>2014年5月11日</td>
+                    </tr>
+                    <tr>
+                      <td>约翰·莉丽亚</td>
+                      <td>2013年9月14日</td>
+                    </tr>
+                  </tbody>
+                </table>
             </div>
-                <div class="ui button">Show flowing popup</div>
-            </div>
-
-
         </div>
     </div>
     <div class="ui flowing popup bottom left transition" id="hide">
-                    <div class="column">
-                      <h4 class="ui header">Basic Plan</h4>
-                      <p><b>2</b> projects, $10 a month</p>
-                      <div class="ui button">Choose</div>
-
-                  </div>
+                    <div class="ui divided selection list">
+                        <a class="item">aaaaa </a>
+                        <a class="item">bbbbb</a>
+                        <a class="item">ccccc</a>
+                    </div>
             </div>
 </body>
 </html>
@@ -132,9 +157,11 @@ $(document).ready(function() {
                 e.returnValue = false;
                 e.cancelBubble = true;
         }
-        $("#hide").removeClass('hidden');
-        $("#hide").css({"left":e.clientX-140,"top":e.clientY-70}).fadeIn();
-        $("#hide").css({"width":200}).fadeIn();
+        if(getSelect()!=""){
+            $("#hide").removeClass('hidden');
+            $("#hide").css({"left":e.clientX-140,"top":e.clientY-70}).fadeIn();
+            $("#hide").css({"width":200}).fadeIn();
+        }
     });
     $('#segment_one div').on("click",function(e){
         if(!$('#hide').is('.hidden'))
