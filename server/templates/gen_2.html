@@ -66,18 +66,12 @@
                     </tr>
                   </thead>
                   <tbody>
+                    {% for i in xx_interface%}
                     <tr>
-                      <td>aaaaa</td>
-                      <td id="aaaaa"></td>
+                        <td>{{i}}</td>
+                        <td id="{{i}}"></td>
                     </tr>
-                    <tr>
-                      <td>bbbbb</td>
-                      <td id="bbbbb"></td>
-                    </tr>
-                    <tr>
-                      <td>ccccc</td>
-                      <td id="ccccc"></td>
-                    </tr>
+                    {% endfor %}
                     </tr>
                   </tbody>
                 </table>
@@ -86,9 +80,11 @@
     </div>
     <div class="ui flowing popup bottom left transition" id="hide">
                     <div class="ui divided selection list">
-                        <a class="item">aaaaa </a>
-                        <a class="item">bbbbb</a>
-                        <a class="item">ccccc</a>
+                        {% set id=0 %}
+                        {% for i in xx_interface%}
+                            <a class="item" id="{{id}}">{{i}}</a>
+                            {% set id=id+1 %}
+                        {% endfor %}
                     </div>
             </div>
 </body>
@@ -97,6 +93,10 @@
 
 <script >
 $(document).ready(function() {
+    var interface=new Array();
+    {% for f in xx_interface%}
+        interface.push("{{f}}");
+    {% endfor %}
     var frame = {{frame|safe}};
     var res_b=new Array();
     {% for f in frame%}
@@ -106,8 +106,10 @@ $(document).ready(function() {
     {% for f in frame%}
         req_b.push("{{f['req_b'].decode('utf8')}}");
     {% endfor %}
+
     var size=frame.length;
     var i=0;
+
     function getSelect()
     {
         if(window.getSelection)
@@ -139,9 +141,15 @@ $(document).ready(function() {
                 e.cancelBubble = true;
         }
         if(getSelect()!=""){
+            var s=""+getSelect();
             $("#hide").removeClass('hidden');
             $("#hide").css({"left":e.clientX-140,"top":e.clientY-70}).fadeIn();
             $("#hide").css({"width":200}).fadeIn();
+            $('#hide a').on("click",function(){
+                var id=parseInt($(this).attr('id'));
+                $("#"+interface[id]).text(s);
+                $("#hide").addClass('hidden');
+            });
         }
     });
     $('#segment_one div').on("click",function(e){
@@ -175,6 +183,8 @@ $(document).ready(function() {
             alert("This is the last!");
         }
     });
+
+
 });
 </script>
 {% endblock %}
