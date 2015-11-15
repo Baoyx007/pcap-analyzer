@@ -103,7 +103,9 @@ def gen_config_2(id):
     # 遍历所有产生的请求对
     # cookie 记录遍历到第几对
     pair = read_pair('server/pair')
-    return render_template('gen_2.html', frame=pair)
+    xx_interface = get_interface('LBS')
+
+    return render_template('gen_2.html', frame=pair[1], xx_interface=xx_interface)
 
 
 # 删除包

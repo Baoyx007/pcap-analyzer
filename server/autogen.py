@@ -2,8 +2,7 @@
 import os
 import pyshark
 from server import UPLOAD_FOLDER
-import re
-import codecs
+import json
 
 __author__ = 'PCPC'
 
@@ -68,3 +67,9 @@ def read_pair(path):
     # for k in frame.keys():
     #     frame[k] = p.sub(r'<br>', frame[k])
     return frame_list
+
+
+def get_interface(business):
+    with open('server/conf/interface.json') as f:
+        xx_interface = json.load(f)
+        return xx_interface[business]
