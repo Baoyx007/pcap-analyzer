@@ -105,7 +105,7 @@ def gen_config_2(id):
     pair = read_pair('server/pair')
     xx_interface = get_interface('LBS')
 
-    return render_template('gen_2.html', frame=pair[1], xx_interface=xx_interface)
+    return render_template('gen_2.html', frame=pair, xx_interface=xx_interface)
 
 
 # 删除包
