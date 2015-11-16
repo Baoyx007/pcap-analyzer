@@ -67,6 +67,19 @@ $(document).ready(function() {
                 }
         }
     });
+     $('#send_gen_2').on('click', function(){
+        var delCheckbox = $("input[name='checkoption']:checked");
+        var size = delCheckbox.size();
+        var arry_ll=s[text].toString().split(',');
+        if(size > 0){
+            var params = "";
+            for(var i=0;i<size;i++){
+                param=delCheckbox.eq(i).val();
+                window.open('/autogen_2/'+param);
+                }
+        }
+        });
+
 
     $('#fileupload').fileupload({
         url: '/upload',
