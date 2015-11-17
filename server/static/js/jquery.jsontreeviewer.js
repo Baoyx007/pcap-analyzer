@@ -100,7 +100,7 @@
             }
             catch (e) {
                 //console.log('invalid json');
-                alert(e);
+//                alert(e);
                 JSONTREEVIEWER.showErrorMsg();
                 return false;
             }

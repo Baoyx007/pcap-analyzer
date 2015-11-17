@@ -38,15 +38,17 @@
                         {% endfor %}
                         </p>
                     </div>
-                    <div class="ui segment">
+                <div class="ui segment">
                         <p>Response Body</p>
                         <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
                     </div>
-                </div>
+            </div>
                 <br>
-                <div class="ui buttons">
-                  <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
-                  <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
+                <div style="float:right">
+                    <div class="ui buttons">
+                      <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
+                      <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
+                    </div>
                 </div>
                  <div id="example1">ddddddd</div>
                 <div id="pathtonode" style="display: none;"></div>
@@ -54,11 +56,11 @@
                     <a id="closetoppath" href="#">Close</a>
                     <textarea id="accumpaths"></textarea>
                 </div>
-                <ul id="browser" class="filetree treeview-famfamfam">
-            </div>
+                <ul id="browser" class="filetree treeview-famfamfam"></ul>
         </div>
-        <div class="ui five wide column">
-            <div class="ui segment">
+    </div>
+    <div class="ui five wide column">
+            <div class="ui segment" style="position: fixed">
                  <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
                  <div class="ui attached segment">
                      <p>这个分段在顶部</p>
@@ -98,28 +100,15 @@
                   </tbody>
                 </table>
             </div>
-        </div>
     </div>
     <div class="ui flowing popup bottom left transition" id="hide">
-                    <div class="ui divided selection list">
-                        {% set id=0 %}
-                        {% for i in xx_interface%}
-                            <a class="item" id="{{id}}">{{i}}</a>
-                            {% set id=id+1 %}
-                        {% endfor %}
-                    </div>
-            </div>
-
-
-    </div>
-
-<div class="ui flowing popup bottom left transition" id="hide">
-    <div class="ui divided selection list">
-        {% set id=0 %}
-        {% for i in xx_interface%}
-        <a class="item" id="{{id}}">{{i}}</a>
-        {% set id=id+1 %}
-        {% endfor %}
+        <div class="ui divided selection list">
+            {% set id=0 %}
+            {% for i in xx_interface%}
+                <a class="item" id="{{id}}">{{i}}</a>
+                {% set id=id+1 %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 </body>
@@ -147,7 +136,7 @@
 
     var size=frame.length;
     var i=0;
-
+<!--功能函数-->
     function getSelect()
     {
         if(window.getSelection)
@@ -170,6 +159,7 @@
         }
         return str;
     }
+<!--功能函数结束    -->
     $(document).on("contextmenu","#segment_one div",function(e){
         if(typeof e.preventDefault === "function"){
                 e.preventDefault();
@@ -202,6 +192,7 @@
                 $('#request_b').html(req_b[i]);
                 $('#response_h').html(getSplit(frame[i]['res_h']));
                 $('#response_b').html(res_b[i]);
+                JSONTREEVIEWER.processJSONTree($('#response_b').text());
             } else {
                 alert("This is the first!");
             }
@@ -214,21 +205,36 @@
                 $('#request_b').html(req_b[i]);
                 $('#response_h').html(getSplit(frame[i]['res_h']));
                 $('#response_b').html(res_b[i]);
+                JSONTREEVIEWER.processJSONTree($('#response_b').text());
             } else {
                 alert("This is the last!");
             }
         });
 
-        $(function () {
-            //Initialise JQUERY4U JSON Tree Viewer
-            JSONTREEVIEWER.init();
 
-            //Events to load example files
-            $('#example1').bind('click', function () {
-                JSONTREEVIEWER.processJSONTree($('#response_b').text());
+        JSONTREEVIEWER.init();
+        JSONTREEVIEWER.processJSONTree($('#response_b').text());
+
+    $(document).on("contextmenu",".file",function(e){
+        if(typeof e.preventDefault === "function"){
+                e.preventDefault();
+                e.stopPropagation();
+        }else{
+                e.returnValue = false;
+                e.cancelBubble = true;
+            }
+        var text=$(this).text();
+        if (text!="") {
+            $("#hide").removeClass('hidden');
+            $("#hide").css({"left": document.body.scrollLeft+e.clientX-140, "top": document.body.scrollTop+e.clientY-70}).fadeIn();
+            $("#hide").css({"width": 200}).fadeIn();
+            $('#hide a').on("click", function () {
+                var id = parseInt($(this).attr('id'));
+                $("#" + interface[id]).text(text);
+                $("#hide").addClass('hidden');
             });
-        });
-
+        }
+    });
     });
 </script>
 {% endblock %}
