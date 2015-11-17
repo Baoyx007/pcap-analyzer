@@ -33,9 +33,74 @@
 
                     <p id="response_h">
                         {% for req in frame[0]['res_h'].split('\n')%}
-                        {{req}}
-                        <br>
+                            {{req}}
+                            <br>
                         {% endfor %}
+                        </p>
+                    </div>
+                    <div class="ui segment">
+                        <p>Response Body</p>
+                        <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
+                    </div>
+                </div>
+                <br>
+                <div class="ui buttons">
+                  <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
+                  <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
+                </div>
+            </div>
+        </div>
+        <div class="ui five wide column">
+            <div class="ui segment">
+                 <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
+                 <div class="ui attached segment">
+                     <p>这个分段在顶部</p>
+                 </div>
+                <div class="ui attached segment">
+                    <p>此段落附加在两边</p>
+                </div>
+                <div class="ui attached segment">
+                    <p>这个分段在底部</p>
+                </div>
+                <table class="ui striped table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in xx_interface%}
+                    <tr>
+                        <td align="right">{{i}}</td>
+                        <td id="{{i}}"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p align="right">RegEx:</p>
+                        </td>
+                        <td>
+                        <div class="ui fluid action input">
+                          <input type="text" placeholder="">
+                        </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="ui flowing popup bottom left transition" id="hide">
+                    <div class="ui divided selection list">
+                        {% set id=0 %}
+                        {% for i in xx_interface%}
+                            <a class="item" id="{{id}}">{{i}}</a>
+                            {% set id=id+1 %}
+                        {% endfor %}
+                    </div>
+            </div>
                     </p>
                 </div>
                 <div class="ui segment">
@@ -116,46 +181,47 @@
         var interface = new Array();
         {% for f in xx_interface %}
         interface.push("{{f}}");
-        {% endfor %}
-        var frame = {{frame | safe}}
-        ;
-        var res_b = new Array();
-        {%  for f in frame %}
+    {% endfor %}
+    var frame = {{frame|safe}};
+    var res_b=new Array();
+    {% for f in frame%}
         res_b.push("{{f['res_b'].decode('utf8')}}");
-        {% endfor %}
-        var req_b = new Array();
-        {% for f in frame %}
+    {% endfor %}
+    var req_b=new Array();
+    {% for f in frame%}
         req_b.push("{{f['req_b'].decode('utf8')}}");
-        {% endfor %}
+    {% endfor %}
 
-        var size = frame.length;
-        var i = 0;
+    var size=frame.length;
+    var i=0;
 
-        function getSelect() {
-            if (window.getSelection) {
-                var t = window.getSelection();
-                return t;
-            }
-            else {
-                var t = document.selection.createRange().text;
-                return t;
-            }
+    function getSelect()
+    {
+        if(window.getSelection)
+        {
+            var t=window.getSelection();
+            return t;
         }
-
-        function getSplit(text) {
-            var array = text.split('\n');
-            var str = "";
-            for (var j = 0; j < array.length; j++) {
-                str += array[j] + "<br>"
-            }
-            return str;
+        else
+        {
+            var t=document.selection.createRange().text;
+            return t;
         }
-
-        $(document).on("contextmenu", "#segment_one div", function (e) {
-            if (typeof e.preventDefault === "function") {
+    }
+    function getSplit(text){
+        var array=text.split('\n');
+        var str="";
+        for(var j=0;j<array.length;j++)
+        {
+            str+=array[j]+"<br>"
+        }
+        return str;
+    }
+    $(document).on("contextmenu","#segment_one div",function(e){
+        if(typeof e.preventDefault === "function"){
                 e.preventDefault();
                 e.stopPropagation();
-            } else {
+        }else{
                 e.returnValue = false;
                 e.cancelBubble = true;
             }
