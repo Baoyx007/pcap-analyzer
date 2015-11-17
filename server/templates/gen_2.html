@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="ui five wide column">
-            <div class="ui segment" style="position: fixed">
+            <div class="ui segment" style="position: fixed;width:25%">
                  <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
                  <div class="ui attached segment">
                      <p>这个分段在顶部</p>
@@ -159,6 +159,13 @@
         }
         return str;
     }
+    function clickToText(){
+        var path = $('#pathtonode').html();
+        var pathdelim = '~';
+        path = path.replace(/ &gt; /g, pathdelim);
+        return path;
+    }
+
 <!--功能函数结束    -->
     $(document).on("contextmenu","#segment_one div",function(e){
         if(typeof e.preventDefault === "function"){
@@ -223,18 +230,20 @@
                 e.returnValue = false;
                 e.cancelBubble = true;
             }
-        var text=$(this).text();
-        if (text!="") {
+        var path = $('#pathtonode').html();
+        var pathdelim = '~';
+        path = path.replace(/ &gt; /g, pathdelim);
+        if (path!="") {
             $("#hide").removeClass('hidden');
             $("#hide").css({"left": document.body.scrollLeft+e.clientX-140, "top": document.body.scrollTop+e.clientY-70}).fadeIn();
             $("#hide").css({"width": 200}).fadeIn();
             $('#hide a').on("click", function () {
                 var id = parseInt($(this).attr('id'));
-                $("#" + interface[id]).text(text);
+                $("#" + interface[id]).text(path);
                 $("#hide").addClass('hidden');
             });
         }
     });
-    });
+});
 </script>
 {% endblock %}
