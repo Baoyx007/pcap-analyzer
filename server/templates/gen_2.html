@@ -68,8 +68,18 @@
                   <tbody>
                     {% for i in xx_interface%}
                     <tr>
-                        <td>{{i}}</td>
+                        <td align="right">{{i}}</td>
                         <td id="{{i}}"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p align="right">RegEx:</p>
+                        </td>
+                        <td>
+                        <div class="ui fluid action input">
+                          <input type="text" placeholder="">
+                        </div>
+                        </td>
                     </tr>
                     {% endfor %}
                     </tr>
