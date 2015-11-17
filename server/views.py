@@ -84,6 +84,7 @@ def packetdetail(id, num):
 
 
 # 产生中间配置1
+#TODO 产生的配置要保存到cookie中
 @app.route('/autogen_1/<id>', methods=['POST'])
 def gen_config_1(id):
     frame_ids = request.get_json()['frameids']

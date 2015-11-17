@@ -5,186 +5,209 @@
     <meta charset="UTF-8">
     <title>配置2分析</title>
 </head>
-<body >
-    <meta charset="UTF-8">
-    <div class="ui two column fitted stackable grid">
-        <div class="ui eleven wide column">
-            <div class="ui segment">
-                <a class="ui orange ribbon label"  style="bottom:10px;">Packets Details</a>
-                <div class="ui segments" id="segment_one">
-                    <div class="ui segment">
-                        <p>request header</p>
-                        <p id="request_h">
-                            {% for req in frame[0]['req_h'].split('\n')%}
-                            {{req}}
-                            <br>
-                            {% endfor %}
-                        </p>
-                    </div>
-                    <div class="ui segment">
-                        <p>Request Body</p>
-                        <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
-                    </div>
-                    <div class="ui segment">
-                        <p>Response Header</p>
-                        <p id="response_h">
-                        {% for req in frame[0]['res_h'].split('\n')%}
-                            {{req}}
-                            <br>
+<body>
+<meta charset="UTF-8">
+<div class="ui two column fitted stackable grid">
+    <div class="ui eleven wide column">
+        <div class="ui segment">
+            <a class="ui orange ribbon label" style="bottom:10px;">Packets Details</a>
+
+            <div class="ui segments" id="segment_one">
+                <div class="ui segment">
+                    <p>request header</p>
+
+                    <p id="request_h">
+                        {% for req in frame[0]['req_h'].split('\n')%}
+                        {{req}}
+                        <br>
                         {% endfor %}
-                        </p>
-                    </div>
-                    <div class="ui segment">
-                        <p>Response Body</p>
-                        <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
-                    </div>
+                    </p>
                 </div>
-                <br>
-                <div class="ui buttons">
-                  <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
-                  <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
+                <div class="ui segment">
+                    <p>Request Body</p>
+
+                    <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
                 </div>
+                <div class="ui segment">
+                    <p>Response Header</p>
+
+                    <p id="response_h">
+                        {% for req in frame[0]['res_h'].split('\n')%}
+                        {{req}}
+                        <br>
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="ui segment">
+                    <p>Response Body</p>
+
+                    <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
+
+
+                    <div id="copyandpastejson">
+                     {"content":{"addr":"上海市,上海市,普陀区,共青路,,289,中国,0","bldg":"","clf":"121.403753|31.227739|2000.000000","floor":"","indoor":"40","point":{"x":"121.403368","y":"31.228084"},"radius":"67.625394","ssid":"2047"},"result":{"error":"161","time":"2015-05-08 10:51:01"}}
+                    </div>
+                    <ul id="browser" class="filetree treeview-famfamfam"></ul>
+                </div>
+            </div>
+            <br>
+
+            <div class="ui buttons">
+                <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back</button>
+                <button class="ui right labeled icon button blue" id="forward">Forward <i
+                        class="right chevron icon"></i></button>
             </div>
         </div>
-        <div class="ui five wide column">
-            <div class="ui segment">
-                 <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
-                 <div class="ui attached segment">
-                     <p>这个分段在顶部</p>
-                 </div>
-                <div class="ui attached segment">
-                    <p>此段落附加在两边</p>
-                </div>
-                <div class="ui attached segment">
-                    <p>这个分段在底部</p>
-                </div>
-                <table class="ui striped table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for i in xx_interface%}
-                    <tr>
-                        <td>{{i}}</td>
-                        <td id="{{i}}"></td>
-                    </tr>
-                    {% endfor %}
-                    </tr>
-                  </tbody>
-                </table>
+         <div id="example1">ddddddd</div>
+    </div>
+    <div class="ui five wide column">
+        <div class="ui segment">
+            <a class="ui orange ribbon label" style="bottom:10px;">Selected Details</a>
+
+            <div class="ui attached segment">
+                <p>这个分段在顶部</p>
             </div>
+            <div class="ui attached segment">
+                <p>此段落附加在两边</p>
+            </div>
+            <div class="ui attached segment">
+                <p>这个分段在底部</p>
+            </div>
+            <table class="ui striped table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in xx_interface%}
+                <tr>
+                    <td>{{i}}</td>
+                    <td id="{{i}}"></td>
+                </tr>
+                {% endfor %}
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    <div class="ui flowing popup bottom left transition" id="hide">
-                    <div class="ui divided selection list">
-                        {% set id=0 %}
-                        {% for i in xx_interface%}
-                            <a class="item" id="{{id}}">{{i}}</a>
-                            {% set id=id+1 %}
-                        {% endfor %}
-                    </div>
-            </div>
+</div>
+<div class="ui flowing popup bottom left transition" id="hide">
+    <div class="ui divided selection list">
+        {% set id=0 %}
+        {% for i in xx_interface%}
+        <a class="item" id="{{id}}">{{i}}</a>
+        {% set id=id+1 %}
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.treeview.css') }}"/>
 
-
-<script >
-$(document).ready(function() {
-    var interface=new Array();
-    {% for f in xx_interface%}
+    <script src="{{ url_for('static', filename='js/jquery.treeview.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jQueryRotateCompressed.2.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.jsontreeviewer.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        var interface = new Array();
+        {% for f in xx_interface %}
         interface.push("{{f}}");
-    {% endfor %}
-    var frame = {{frame|safe}};
-    var res_b=new Array();
-    {% for f in frame%}
+        {% endfor %}
+        var frame = {{frame | safe}}
+        ;
+        var res_b = new Array();
+        {%  for f in frame %}
         res_b.push("{{f['res_b'].decode('utf8')}}");
-    {% endfor %}
-    var req_b=new Array();
-    {% for f in frame%}
+        {% endfor %}
+        var req_b = new Array();
+        {% for f in frame %}
         req_b.push("{{f['req_b'].decode('utf8')}}");
-    {% endfor %}
+        {% endfor %}
 
-    var size=frame.length;
-    var i=0;
+        var size = frame.length;
+        var i = 0;
 
-    function getSelect()
-    {
-        if(window.getSelection)
-        {
-            var t=window.getSelection();
-            return t;
+        function getSelect() {
+            if (window.getSelection) {
+                var t = window.getSelection();
+                return t;
+            }
+            else {
+                var t = document.selection.createRange().text;
+                return t;
+            }
         }
-        else
-        {
-            var t=document.selection.createRange().text;
-            return t;
+
+        function getSplit(text) {
+            var array = text.split('\n');
+            var str = "";
+            for (var j = 0; j < array.length; j++) {
+                str += array[j] + "<br>"
+            }
+            return str;
         }
-    }
-    function getSplit(text){
-        var array=text.split('\n');
-        var str="";
-        for(var j=0;j<array.length;j++)
-        {
-            str+=array[j]+"<br>"
-        }
-        return str;
-    }
-    $(document).on("contextmenu","#segment_one div",function(e){
-        if(typeof e.preventDefault === "function"){
+
+        $(document).on("contextmenu", "#segment_one div", function (e) {
+            if (typeof e.preventDefault === "function") {
                 e.preventDefault();
                 e.stopPropagation();
-        }else{
+            } else {
                 e.returnValue = false;
                 e.cancelBubble = true;
-        }
-        if(getSelect()!=""){
-            var s=""+getSelect();
-            $("#hide").removeClass('hidden');
-            $("#hide").css({"left":e.clientX-140,"top":e.clientY-70}).fadeIn();
-            $("#hide").css({"width":200}).fadeIn();
-            $('#hide a').on("click",function(){
-                var id=parseInt($(this).attr('id'));
-                $("#"+interface[id]).text(s);
-                $("#hide").addClass('hidden');
-            });
-        }
-    });
-    $('#segment_one div').on("click",function(e){
-        if(!$('#hide').is('.hidden'))
-        {
-            $("#hide").addClass('hidden');
-        }
+            }
+            if (getSelect() != "") {
+                var s = "" + getSelect();
+                $("#hide").removeClass('hidden');
+                $("#hide").css({"left": e.clientX - 140, "top": e.clientY - 70}).fadeIn();
+                $("#hide").css({"width": 200}).fadeIn();
+                $('#hide a').on("click", function () {
+                    var id = parseInt($(this).attr('id'));
+                    $("#" + interface[id]).text(s);
+                    $("#hide").addClass('hidden');
+                });
+            }
         });
-    $('#back').on("click",function(){
-        if(i-1>=0)
-        {
-            i=i-1;
-            $('#request_h').html(getSplit(frame[i]['req_h']));
-            $('#request_b').html(req_b[i]);
-            $('#response_h').html(getSplit(frame[i]['res_h']));
-            $('#response_b').html(res_b[i]);
-        }else{
-            alert("This is the first!");
-        }
+        $('#segment_one div').on("click", function (e) {
+            if (!$('#hide').is('.hidden')) {
+                $("#hide").addClass('hidden');
+            }
+        });
+        $('#back').on("click", function () {
+            if (i - 1 >= 0) {
+                i = i - 1;
+                $('#request_h').html(getSplit(frame[i]['req_h']));
+                $('#request_b').html(req_b[i]);
+                $('#response_h').html(getSplit(frame[i]['res_h']));
+                $('#response_b').html(res_b[i]);
+            } else {
+                alert("This is the first!");
+            }
+        });
+
+        $('#forward').on("click", function () {
+            if (i + 1 < size) {
+                i = i + 1;
+                $('#request_h').html(getSplit(frame[i]['req_h']));
+                $('#request_b').html(req_b[i]);
+                $('#response_h').html(getSplit(frame[i]['res_h']));
+                $('#response_b').html(res_b[i]);
+            } else {
+                alert("This is the last!");
+            }
+        });
+
+        $(function () {
+            //Initialise JQUERY4U JSON Tree Viewer
+            JSONTREEVIEWER.init();
+
+            //Events to load example files
+            $('#example1').bind('click', function () {
+                JSONTREEVIEWER.processJSONTree('copyandpastejson');
+            });
+        });
+
     });
-
-    $('#forward').on("click",function(){
-        if(i+1<size)
-        {
-            i=i+1;
-            $('#request_h').html(getSplit(frame[i]['req_h']));
-            $('#request_b').html(req_b[i]);
-            $('#response_h').html(getSplit(frame[i]['res_h']));
-            $('#response_b').html(res_b[i]);
-        }else{
-            alert("This is the last!");
-        }
-    });
-
-
-});
 </script>
 {% endblock %}
