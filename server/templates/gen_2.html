@@ -48,6 +48,13 @@
                   <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
                   <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
                 </div>
+                 <div id="example1">ddddddd</div>
+                <div id="pathtonode" style="display: none;"></div>
+                <div id="toppathwrap" style="display: block;">
+                    <a id="closetoppath" href="#">Close</a>
+                    <textarea id="accumpaths"></textarea>
+                </div>
+                <ul id="browser" class="filetree treeview-famfamfam">
             </div>
         </div>
         <div class="ui five wide column">
@@ -101,65 +108,10 @@
                         {% endfor %}
                     </div>
             </div>
-                    </p>
-                </div>
-                <div class="ui segment">
-                    <p>Response Body</p>
-
-                    <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
 
 
-                    <ul id="browser" class="filetree treeview-famfamfam"></ul>
-                </div>
-            </div>
-            <br>
-
-            <div class="ui buttons">
-                <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back</button>
-                <button class="ui right labeled icon button blue" id="forward">Forward <i
-                        class="right chevron icon"></i></button>
-            </div>
-        </div>
-         <div id="example1">ddddddd</div>
-        <div id="pathtonode" style="display: none;"></div>
-        <div id="toppathwrap" style="display: block;">
-		<a id="closetoppath" href="#">Close</a>
-		<textarea id="accumpaths"></textarea>
-	</div>
     </div>
-    <div class="ui five wide column">
-        <div class="ui segment">
-            <a class="ui orange ribbon label" style="bottom:10px;">Selected Details</a>
 
-            <div class="ui attached segment">
-                <p>这个分段在顶部</p>
-            </div>
-            <div class="ui attached segment">
-                <p>此段落附加在两边</p>
-            </div>
-            <div class="ui attached segment">
-                <p>这个分段在底部</p>
-            </div>
-            <table class="ui striped table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for i in xx_interface%}
-                <tr>
-                    <td>{{i}}</td>
-                    <td id="{{i}}"></td>
-                </tr>
-                {% endfor %}
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 <div class="ui flowing popup bottom left transition" id="hide">
     <div class="ui divided selection list">
         {% set id=0 %}
