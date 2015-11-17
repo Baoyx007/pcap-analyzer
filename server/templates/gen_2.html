@@ -5,29 +5,33 @@
     <meta charset="UTF-8">
     <title>配置2分析</title>
 </head>
-<body >
-    <meta charset="UTF-8">
-    <div class="ui two column fitted stackable grid">
-        <div class="ui eleven wide column">
-            <div class="ui segment">
-                <a class="ui orange ribbon label"  style="bottom:10px;">Packets Details</a>
-                <div class="ui segments" id="segment_one">
-                    <div class="ui segment">
-                        <p>request header</p>
-                        <p id="request_h">
-                            {% for req in frame[0]['req_h'].split('\n')%}
-                            {{req}}
-                            <br>
-                            {% endfor %}
-                        </p>
-                    </div>
-                    <div class="ui segment">
-                        <p>Request Body</p>
-                        <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
-                    </div>
-                    <div class="ui segment">
-                        <p>Response Header</p>
-                        <p id="response_h">
+<body>
+<meta charset="UTF-8">
+<div class="ui two column fitted stackable grid">
+    <div class="ui eleven wide column">
+        <div class="ui segment">
+            <a class="ui orange ribbon label" style="bottom:10px;">Packets Details</a>
+
+            <div class="ui segments" id="segment_one">
+                <div class="ui segment">
+                    <p>request header</p>
+
+                    <p id="request_h">
+                        {% for req in frame[0]['req_h'].split('\n')%}
+                        {{req}}
+                        <br>
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="ui segment">
+                    <p>Request Body</p>
+
+                    <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
+                </div>
+                <div class="ui segment">
+                    <p>Response Header</p>
+
+                    <p id="response_h">
                         {% for req in frame[0]['res_h'].split('\n')%}
                             {{req}}
                             <br>
@@ -44,6 +48,13 @@
                   <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
                   <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
                 </div>
+                 <div id="example1">ddddddd</div>
+                <div id="pathtonode" style="display: none;"></div>
+                <div id="toppathwrap" style="display: block;">
+                    <a id="closetoppath" href="#">Close</a>
+                    <textarea id="accumpaths"></textarea>
+                </div>
+                <ul id="browser" class="filetree treeview-famfamfam">
             </div>
         </div>
         <div class="ui five wide column">
@@ -98,14 +109,30 @@
                         {% endfor %}
                     </div>
             </div>
+
+
+    </div>
+
+<div class="ui flowing popup bottom left transition" id="hide">
+    <div class="ui divided selection list">
+        {% set id=0 %}
+        {% for i in xx_interface%}
+        <a class="item" id="{{id}}">{{i}}</a>
+        {% set id=id+1 %}
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.treeview.css') }}"/>
 
-
-<script >
-$(document).ready(function() {
-    var interface=new Array();
-    {% for f in xx_interface%}
+    <script src="{{ url_for('static', filename='js/jquery.treeview.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jQueryRotateCompressed.2.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.jsontreeviewer.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        var interface = new Array();
+        {% for f in xx_interface %}
         interface.push("{{f}}");
     {% endfor %}
     var frame = {{frame|safe}};
@@ -150,52 +177,58 @@ $(document).ready(function() {
         }else{
                 e.returnValue = false;
                 e.cancelBubble = true;
-        }
-        if(getSelect()!=""){
-            var s=""+getSelect();
-            $("#hide").removeClass('hidden');
-            $("#hide").css({"left":e.clientX-140,"top":e.clientY-70}).fadeIn();
-            $("#hide").css({"width":200}).fadeIn();
-            $('#hide a').on("click",function(){
-                var id=parseInt($(this).attr('id'));
-                $("#"+interface[id]).text(s);
-                $("#hide").addClass('hidden');
-            });
-        }
-    });
-    $('#segment_one div').on("click",function(e){
-        if(!$('#hide').is('.hidden'))
-        {
-            $("#hide").addClass('hidden');
-        }
+            }
+            if (getSelect() != "") {
+                var s = "" + getSelect();
+                $("#hide").removeClass('hidden');
+                $("#hide").css({"left": e.clientX - 140, "top": e.clientY - 70}).fadeIn();
+                $("#hide").css({"width": 200}).fadeIn();
+                $('#hide a').on("click", function () {
+                    var id = parseInt($(this).attr('id'));
+                    $("#" + interface[id]).text(s);
+                    $("#hide").addClass('hidden');
+                });
+            }
         });
-    $('#back').on("click",function(){
-        if(i-1>=0)
-        {
-            i=i-1;
-            $('#request_h').html(getSplit(frame[i]['req_h']));
-            $('#request_b').html(req_b[i]);
-            $('#response_h').html(getSplit(frame[i]['res_h']));
-            $('#response_b').html(res_b[i]);
-        }else{
-            alert("This is the first!");
-        }
+        $('#segment_one div').on("click", function (e) {
+            if (!$('#hide').is('.hidden')) {
+                $("#hide").addClass('hidden');
+            }
+        });
+        $('#back').on("click", function () {
+            if (i - 1 >= 0) {
+                i = i - 1;
+                $('#request_h').html(getSplit(frame[i]['req_h']));
+                $('#request_b').html(req_b[i]);
+                $('#response_h').html(getSplit(frame[i]['res_h']));
+                $('#response_b').html(res_b[i]);
+            } else {
+                alert("This is the first!");
+            }
+        });
+
+        $('#forward').on("click", function () {
+            if (i + 1 < size) {
+                i = i + 1;
+                $('#request_h').html(getSplit(frame[i]['req_h']));
+                $('#request_b').html(req_b[i]);
+                $('#response_h').html(getSplit(frame[i]['res_h']));
+                $('#response_b').html(res_b[i]);
+            } else {
+                alert("This is the last!");
+            }
+        });
+
+        $(function () {
+            //Initialise JQUERY4U JSON Tree Viewer
+            JSONTREEVIEWER.init();
+
+            //Events to load example files
+            $('#example1').bind('click', function () {
+                JSONTREEVIEWER.processJSONTree($('#response_b').text());
+            });
+        });
+
     });
-
-    $('#forward').on("click",function(){
-        if(i+1<size)
-        {
-            i=i+1;
-            $('#request_h').html(getSplit(frame[i]['req_h']));
-            $('#request_b').html(req_b[i]);
-            $('#response_h').html(getSplit(frame[i]['res_h']));
-            $('#response_b').html(res_b[i]);
-        }else{
-            alert("This is the last!");
-        }
-    });
-
-
-});
 </script>
 {% endblock %}
