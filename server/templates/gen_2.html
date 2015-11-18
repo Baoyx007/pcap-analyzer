@@ -43,34 +43,26 @@
                         <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
                     </div>
             </div>
-                <br>
-                <div style="float:right">
+            <br>
+            <div style="float:right">
                     <div class="ui buttons">
                       <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
                       <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
                     </div>
                 </div>
-                 <div id="example1">ddddddd</div>
+            <a class="ui orange ribbon label"style="top:10px">Trees Details</a>
+            <div class="ui segment" style="top:10px" id="bottom_div">
                 <div id="pathtonode" style="display: none;"></div>
                 <div id="toppathwrap" style="display: block;">
-                    <a id="closetoppath" href="#">Close</a>
-                    <textarea id="accumpaths"></textarea>
+                    <textarea id="accumpaths" style="display: none;"></textarea>
                 </div>
                 <ul id="browser" class="filetree treeview-famfamfam"></ul>
+            </div>
         </div>
     </div>
     <div class="ui five wide column">
             <div class="ui segment" style="position: fixed;width:25%">
                  <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
-                 <div class="ui attached segment">
-                     <p>这个分段在顶部</p>
-                 </div>
-                <div class="ui attached segment">
-                    <p>此段落附加在两边</p>
-                </div>
-                <div class="ui attached segment">
-                    <p>这个分段在底部</p>
-                </div>
                 <table class="ui striped table">
                   <thead>
                     <tr>
@@ -82,7 +74,7 @@
                     {% for i in xx_interface%}
                     <tr>
                         <td align="right">{{i}}</td>
-                        <td id="{{i}}"></td>
+                        <td id="{{i}}" style="word-break:break-word;"></td>
                     </tr>
                     <tr>
                         <td>
@@ -244,6 +236,11 @@
             });
         }
     });
+    $('#bottom_div').on("click", function (e) {
+            if (!$('#hide').is('.hidden')) {
+                $("#hide").addClass('hidden');
+            }
+        });
 });
 </script>
 {% endblock %}
