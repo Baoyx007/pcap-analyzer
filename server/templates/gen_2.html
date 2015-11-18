@@ -45,6 +45,9 @@
             </div>
             <br>
             <div style="float:right">
+                    <div class="ui black small right floated button" id="sendToService">
+                        <i class="send icon"></i>Second Analyze
+                    </div>
                     <div class="ui buttons">
                       <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
                       <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
@@ -61,37 +64,37 @@
         </div>
     </div>
     <div class="ui five wide column">
-            <div class="ui segment" style="position: fixed;width:25%">
-                 <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
-                <table class="ui striped table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for i in xx_interface%}
-                    <tr>
-                        <td align="right">{{i}}</td>
-                        <td id="{{i}}" style="word-break:break-word;"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p align="right">RegEx:</p>
-                        </td>
-                        <td>
-                        <div class="ui fluid action input">
-                          <input type="text">
+        <div class="ui segment" style="position: fixed;width:25%;">
+            <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
+            <table class="ui striped table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for i in xx_interface%}
+                <tr>
+                    <td align="right">{{i}}</td>
+                    <td id="{{i}}" style="word-break:break-word;"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <p align="right">RegEx:</p>
+                    </td>
+                    <td>
+                    <div class="ui fluid action input">
+                      <input type="text">
 
-                        </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    </tr>
-                  </tbody>
-                </table>
-            </div>
+                    </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+        </div>
     </div>
     <div class="ui flowing popup bottom left transition" id="hide">
         <div class="ui divided selection list">
