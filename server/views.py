@@ -97,9 +97,6 @@ def gen_config_1(id):
         ids_int.append(int(id))
     mid_data_list = gen_config_1_json(file, ids_int)
 
-    for pair in mid_data_list:
-        pass
-
     return render_template('gen_1.html', DataList=mid_data_list)
 
 
@@ -115,7 +112,8 @@ def gen_config_2(id):
 
 @app.route('/autogen_2_filter', methods=['POST'])
 def gen_config_2_filter():
-
+    locs = request.get_json()['locations']
+    locs_send = parse_locations(locs)
     pass
 
 
