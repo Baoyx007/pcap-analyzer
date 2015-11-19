@@ -4,6 +4,7 @@
 
 from server.func import *
 from server.autogen import *
+from flask import session, flash
 
 
 # 主页
@@ -84,7 +85,7 @@ def packetdetail(id, num):
 
 
 # 产生中间配置1
-#TODO 产生的配置要保存到cookie中
+# TODO 产生的配置要保存到cookie中
 @app.route('/autogen_1/<id>', methods=['POST'])
 def gen_config_1(id):
     frame_ids = request.get_json()['frameids']
@@ -95,18 +96,27 @@ def gen_config_1(id):
     for id in frame_ids.split(','):
         ids_int.append(int(id))
     mid_data_list = gen_config_1_json(file, ids_int)
+
+    for pair in mid_data_list:
+        pass
+
     return render_template('gen_1.html', DataList=mid_data_list)
 
 
-# 产生中间配置2
+# 读取pair中的请求对，返还给前端
 @app.route('/autogen_2/<id>', methods=['GET'])
 def gen_config_2(id):
     # 遍历所有产生的请求对
     # cookie 记录遍历到第几对
     pair = read_pair('server/pair')
     xx_interface = get_interface('LBS')
-
     return render_template('gen_2.html', frame=pair, xx_interface=xx_interface)
+
+
+@app.route('/autogen_2_filter', methods=['POST'])
+def gen_config_2_filter():
+
+    pass
 
 
 # 删除包
@@ -141,4 +151,5 @@ def teardown_request(exception):
 
 @app.route('/hello/<user>')
 def hello(user):
-    return 'Hello %s' % user
+    flash('a test')
+    return redirect(url_for('index'))

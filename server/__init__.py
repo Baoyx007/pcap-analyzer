@@ -11,6 +11,7 @@ import os, sys, time, math, re
 import simplejson, sqlite3
 import pyshark
 import chartkick
+from flask.ext.sqlalchemy import SQLAlchemy
 
 UPLOAD_FOLDER = 'server/pcapfile/'
 ALLOWED_EXTENSIONS = set(['pcap', 'pcapng', 'cap'])
@@ -19,6 +20,7 @@ DATABASE = 'server/db/db.sqlite'
 app = Flask(__name__)
 app.jinja_env.add_extension("chartkick.ext.charts")
 app.config.from_object(__name__)
+app.secret_key = '\xac=\x0f\xee\x88\x9f\xb9\xfaF\x04\x93\xc2\x12\xc2\x9fG\t\xa1\xf2t\x80\xe5\x1c['
 # print(__name__)
 import views
 import func
