@@ -107,14 +107,15 @@ def gen_config_2(id):
     # cookie 记录遍历到第几对
     pair = read_pair('server/pair')
     xx_interface = get_interface('LBS')
-    return render_template('gen_2.html', frame=pair, xx_interface=xx_interface)
+    info = get_interface('INFO')
+    return render_template('gen_2.html', frame=pair, xx_interface=xx_interface, info=info)
 
 
 @app.route('/autogen_2_filter', methods=['POST'])
 def gen_config_2_filter():
     locs = request.get_json()['locations']
     locs_send = parse_locations(locs)
-    pack_senddata(locs_send,request.get_json()['infoDef'])
+    pack_senddata(locs_send, request.get_json()['infoDef'])
     pass
 
 

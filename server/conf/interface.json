@@ -6,5 +6,6 @@
     "LAT",
     "LNG",
     "RADUIS"
-  ]
+  ],
+  "INFO":["sourcefrom","coordtype"]
 }
