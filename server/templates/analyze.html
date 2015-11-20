@@ -227,7 +227,7 @@
                 }
                 var newWindow;
                 function makeNewWindow(){
-                    newWindow = window.open("");
+                    newWindow = window.open("/autog3en_1/6");
                   }
                   function subWrite(content){
                     if(newWindow.closed){
@@ -267,15 +267,16 @@
                             contentType: 'application/json; charset=utf-8',
                             url: '/autogen_1/' + url_id,
                             data: $.toJSON(ids),
-                            success: function (response) {
+                            success: function () {
                                 isSuccess=true;
-                                content=response;
+                                <!--content=response;-->
                             }
                         });
                         if(isSuccess==true)
                         {
-                            makeNewWindow();
-                            subWrite(content);
+                            window.open("/autogen_1/" + url_id);
+                            <!--makeNewWindow();-->
+                            <!--subWrite(content);-->
                         }
                     }
                     else {
