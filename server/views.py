@@ -114,6 +114,7 @@ def gen_config_2(id):
 def gen_config_2_filter():
     locs = request.get_json()['locations']
     locs_send = parse_locations(locs)
+    pack_senddata(locs_send,request.get_json()['infoDef'])
     pass
 
 

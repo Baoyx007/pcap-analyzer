@@ -14,10 +14,16 @@ class RegexTree:
         self.childrens = []
 
     def __repr__(self, level=0):
-        ret = "\t" * level + repr(self.name+':'+self.value) + "\n"
+        ret = "\t" * level + repr(self.name + '~' + self.value) + "\n"
         for child in self.childrens:
             ret += child.__repr__(level + 1)
         return ret
+
+    def convert2Json(self):
+        infoname,regex = self.value.split('~')
+
+        for child in self.childrens:
+            self.convert2Json()
 
 
 def gen_config_1_json(pcapfile, frame_ids):
@@ -138,4 +144,11 @@ def parse_locations(locs):
             p.value = info['infoname'] + '~' + info['regex']
             total_tree = mergeTree(total_tree, root)
         loc_tree.append(total_tree)
-    return total_tree
+    return loc_tree
+
+
+
+
+def pack_senddata(reg_tree, info, **kw):
+
+    pass

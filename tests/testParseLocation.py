@@ -3,7 +3,14 @@ __author__ = 'PCPC'
 from server.autogen import *
 
 j = r'''
-{"responsebody": [
+{"reqeuestBody":[
+            {
+               "infoname": "IMEI",
+                "value": "loc.map.baidu.com",
+                "regex": "[^\"\\r\\n]+"
+            }
+        ],
+        "responsebody": [
             {
                 "infoname": "PositionDesc",
                 "value": "content~addr~上海市,上海市,普陀区,共青路,,289,中国,0",
@@ -23,7 +30,8 @@ j = r'''
                 "infoname": "PositionLat",
                 "value": "content~point~y~31.228084",
                 "regex": "[^\"\\r\\n]+"
-            }]
+            }
+        ]
 }
 '''
 print(parse_locations(j))
