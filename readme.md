@@ -21,9 +21,6 @@ Features
 	*	数据包细节查询
 	*	Filter过滤
 	*	数据包分析(来源/目的:IP/端口)
-	*	Web请求提取
-	*	DNS请求提取
-	*	Mail流量提取
 
 Files
 ---
@@ -86,7 +83,6 @@ Build With
 *	[Chartkick](https://github.com/mher/chartkick.py)
 *	[Highcharts](http://api.highcharts.com/highcharts)
 
-More
+Thanks to
 ---
-
-For More Infomation.Visit My Blog:[le4f.net](http://le4f.net/post/post/pcap-online-analyzer)
+[pcap-analyzer](https://github.com/le4f/pcap-analyzer)
