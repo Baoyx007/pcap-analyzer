@@ -16,7 +16,7 @@
                 <div class="ui segment">
                     <p>request header</p>
 
-                    <p id="request_h">
+                    <p id="requestHead">
                         {% for req in frame[0]['req_h'].split('\n')%}
                         {{req}}
                         <br>
@@ -26,12 +26,12 @@
                 <div class="ui segment">
                     <p>Request Body</p>
 
-                    <p style="word-break:break-word;" id="request_b">{{frame[0]['req_b'].decode('utf8')}}</p>
+                    <p style="word-break:break-word;" id="requestBody">{{frame[0]['req_b'].decode('utf8')}}</p>
                 </div>
                 <div class="ui segment">
                     <p>Response Header</p>
 
-                    <p id="response_h">
+                    <p id="responseHead">
                         {% for req in frame[0]['res_h'].split('\n')%}
                             {{req}}
                             <br>
@@ -40,7 +40,16 @@
                     </div>
                 <div class="ui segment">
                         <p>Response Body</p>
-                        <p style="word-break:break-word;" id="response_b">{{frame[0]['res_b'].decode('utf8')}}</p>
+                        <p style="word-break:break-word;" id="responseBody">{{frame[0]['res_b'].decode('utf8')}}</p>
+                        <div class="ui small button" id="show_tree">Show Trees</div>
+                        <div class="ui segment" style="display:none" id="bottom_div">
+                            <a class="ui orange ribbon label">Trees Details</a>
+                            <div id="pathtonode" style="display: none;"></div>
+                            <div id="toppathwrap" style="display: block;">
+                                <textarea id="accumpaths" style="display: none;"></textarea>
+                            </div>
+                            <ul id="browser" class="filetree treeview-famfamfam"></ul>
+                        </div>
                     </div>
             </div>
             <br>
@@ -52,15 +61,8 @@
                       <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
                       <button class="ui right labeled icon button blue" id="forward">Forward <i class="right chevron icon"></i> </button>
                     </div>
-                </div>
-            <a class="ui orange ribbon label"style="top:10px">Trees Details</a>
-            <div class="ui segment" style="top:10px" id="bottom_div">
-                <div id="pathtonode" style="display: none;"></div>
-                <div id="toppathwrap" style="display: block;">
-                    <textarea id="accumpaths" style="display: none;"></textarea>
-                </div>
-                <ul id="browser" class="filetree treeview-famfamfam"></ul>
             </div>
+
         </div>
     </div>
     <div class="ui five wide column">
@@ -113,9 +115,9 @@
     <script src="{{ url_for('static', filename='js/jquery.jsontreeviewer.js') }}"></script>
 <script>
     $(document).ready(function () {
-        var interface = new Array();
-        {% for f in xx_interface %}
-        interface.push("{{f}}");
+    var interface = new Array();
+    {% for f in xx_interface %}
+    interface.push("{{f}}");
     {% endfor %}
     var frame = {{frame|safe}};
     var res_b=new Array();
@@ -160,7 +162,7 @@
     }
 
 <!--功能函数结束    -->
-    $(document).on("contextmenu","#segment_one div",function(e){
+    $(document).on("contextmenu","#segment_one div p",function(e){
         if(typeof e.preventDefault === "function"){
                 e.preventDefault();
                 e.stopPropagation();
@@ -168,17 +170,19 @@
                 e.returnValue = false;
                 e.cancelBubble = true;
             }
-            if (getSelect() != "") {
-                var s = "" + getSelect();
-                $("#hide").removeClass('hidden');
-                $("#hide").css({"left": e.clientX - 140, "top": e.clientY - 70}).fadeIn();
-                $("#hide").css({"width": 200}).fadeIn();
-                $('#hide a').on("click", function () {
-                    var id = parseInt($(this).attr('id'));
-                    $("#" + interface[id]).text(s);
-                    $("#hide").addClass('hidden');
-                });
-            }
+        if (getSelect() != "") {
+            var s_id=$(this).attr("id");
+            var s = "" + getSelect();
+            $("#hide").removeClass('hidden');
+            $("#hide").css({"left": e.clientX - 140, "top": e.clientY - 70}).fadeIn();
+            $("#hide").css({"width": 200}).fadeIn();
+            $('#hide a').on("click", function () {
+                var id = parseInt($(this).attr('id'));
+                $("#" + interface[id]).text(s);
+                $("#" + interface[id]).attr('name',s_id);
+                $("#hide").addClass('hidden');
+            });
+        }
         });
         $('#segment_one div').on("click", function (e) {
             if (!$('#hide').is('.hidden')) {
@@ -188,11 +192,11 @@
         $('#back').on("click", function () {
             if (i - 1 >= 0) {
                 i = i - 1;
-                $('#request_h').html(getSplit(frame[i]['req_h']));
-                $('#request_b').html(req_b[i]);
-                $('#response_h').html(getSplit(frame[i]['res_h']));
-                $('#response_b').html(res_b[i]);
-                JSONTREEVIEWER.processJSONTree($('#response_b').text());
+                $('#requestHead').html(getSplit(frame[i]['req_h']));
+                $('#requestBody').html(req_b[i]);
+                $('#responseHead').html(getSplit(frame[i]['res_h']));
+                $('#responseBody').html(res_b[i]);
+                JSONTREEVIEWER.processJSONTree($('#responseBody').text());
             } else {
                 alert("This is the first!");
             }
@@ -201,11 +205,11 @@
         $('#forward').on("click", function () {
             if (i + 1 < size) {
                 i = i + 1;
-                $('#request_h').html(getSplit(frame[i]['req_h']));
-                $('#request_b').html(req_b[i]);
-                $('#response_h').html(getSplit(frame[i]['res_h']));
-                $('#response_b').html(res_b[i]);
-                JSONTREEVIEWER.processJSONTree($('#response_b').text());
+                $('#requestHead').html(getSplit(frame[i]['req_h']));
+                $('#requestBody').html(req_b[i]);
+                $('#responseHead').html(getSplit(frame[i]['res_h']));
+                $('#responseBody').html(res_b[i]);
+                JSONTREEVIEWER.processJSONTree($('#responseBody').text());
             } else {
                 alert("This is the last!");
             }
@@ -213,7 +217,7 @@
 
 
         JSONTREEVIEWER.init();
-        JSONTREEVIEWER.processJSONTree($('#response_b').text());
+        JSONTREEVIEWER.processJSONTree($('#responseBody').text());
 
     $(document).on("contextmenu",".file",function(e){
         if(typeof e.preventDefault === "function"){
@@ -227,21 +231,69 @@
         var pathdelim = '~';
         path = path.replace(/ &gt; /g, pathdelim);
         if (path!="") {
+            var b_id=$(this).parents('.filetree').attr('id');
+            if(b_id=="browser")
+                b_id="responseBody";
             $("#hide").removeClass('hidden');
             $("#hide").css({"left": document.body.scrollLeft+e.clientX-140, "top": document.body.scrollTop+e.clientY-70}).fadeIn();
             $("#hide").css({"width": 200}).fadeIn();
             $('#hide a').on("click", function () {
                 var id = parseInt($(this).attr('id'));
                 $("#" + interface[id]).text(path);
+                $("#" + interface[id]).attr('name',b_id);
                 $("#hide").addClass('hidden');
             });
         }
     });
     $('#bottom_div').on("click", function (e) {
-            if (!$('#hide').is('.hidden')) {
-                $("#hide").addClass('hidden');
+        if (!$('#hide').is('.hidden')) {
+            $("#hide").addClass('hidden');
+        }
+    });
+
+    $('#show_tree').on("click",function (e) {
+        $('#bottom_div').css("display","block");
+    });
+
+<!--实现传送data数据    -->
+    $('#sendToService').on("click",function(e){
+        var data={};
+        data.infoDef=[
+            {
+                "name": "sourcefrom",
+                "value": "58同程"
+            },
+            {
+                "name": "coordtype",
+                "value": "GPS"
             }
-        });
+        ];
+        var requestHead=[];
+        var requestBody=[];
+        var responseHead=[];
+        var responseBody=[];
+        var info={};
+        info.requestHead=requestHead;
+        info.requestBody=requestBody;
+        info.responseHead=responseHead;
+        info.responseBody=responseBody;
+        {% for i in xx_interface%}
+            if($('#{{i}}').text()!="")
+            {
+                var i_detail={};
+                i_detail['infoname']="{{i}}";
+                i_detail['value']=$('#{{i}}').text();
+                var regEx=$('#{{i}}').parent().next().find("td div input").val();
+                i_detail['regex']=regEx;
+                var name=$('#{{i}}').attr('name');
+                info[name].push(i_detail);
+            }
+        {% endfor %}
+        data.locations=info;
+        console.log(data);
+    });
+
+<!--结束传送data数据-->
 });
 </script>
 {% endblock %}
