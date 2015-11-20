@@ -255,10 +255,10 @@
         $('#bottom_div').css("display","block");
     });
 
-<!--实现传送data数据    -->
+<!--实现传送sendData数据    -->
     $('#sendToService').on("click",function(e){
-        var data={};
-        data.infoDef=[
+        var sendData={};
+        sendData.infoDef=[
             {
                 "name": "sourcefrom",
                 "value": "58同程"
@@ -289,11 +289,21 @@
                 info[name].push(i_detail);
             }
         {% endfor %}
-        data.locations=info;
-        console.log(data);
+        sendData.locations=info;
+        <!--console.log(sendData);-->
+        $.ajax({
+            type: 'POST',
+            async: true,
+            contentType: 'application/json; charset=utf-8',
+            url: '/autogen_2_filter',
+            data: $.toJSON(sendData),
+            success: function (response) {
+
+            }
+        });
     });
 
-<!--结束传送data数据-->
+<!--结束传送sendData数据-->
 });
 </script>
 {% endblock %}
