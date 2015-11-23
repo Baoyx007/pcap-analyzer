@@ -5,7 +5,8 @@
 from server.func import *
 from server.autogen import *
 from flask import session, flash
-
+global MID_DATA_LIST
+MID_DATA_LIST=[]
 
 # 主页
 @app.route('/')
@@ -86,18 +87,24 @@ def packetdetail(id, num):
 
 # 产生中间配置1
 # TODO 产生的配置要保存到cookie中
-@app.route('/autogen_1/<id>', methods=['POST'])
+@app.route('/autogen_1/<id>', methods=['POST','GET'])
 def gen_config_1(id):
-    frame_ids = request.get_json()['frameids']
-    id = int(id)
-    # TODO 文件可能不存在
-    file = get_pcap_entries(id)[0]['filename']
-    ids_int = []
-    for id in frame_ids.split(','):
-        ids_int.append(int(id))
-    mid_data_list = gen_config_1_json(file, ids_int)
+    global MID_DATA_LIST
+    if request.method == 'POST':
+        frame_ids = request.get_json()['frameids']
+        id = int(id)
+        # TODO 文件可能不存在
+        file = get_pcap_entries(id)[0]['filename']
+        ids_int = []
+        for id in frame_ids.split(','):
+            ids_int.append(int(id))
+        MID_DATA_LIST = gen_config_1_json(file, ids_int)
+        return render_template("gen_1.html")
+    elif request.method == 'GET':
+        mid_data=MID_DATA_LIST
+        MID_DATA_LIST=[]
+        return render_template('gen_1.html', DataList=mid_data)
 
-    return render_template('gen_1.html', DataList=mid_data_list)
 
 
 # 读取pair中的请求对，返还给前端
