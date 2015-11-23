@@ -14,16 +14,23 @@ class RegexTree:
         self.childrens = []
 
     def __repr__(self, level=0):
-        ret = "\t" * level + repr(self.name + '~' + self.value) + "\n"
+        ret = "\t" * level + repr(self.name + '#' + self.value) + "\n"
         for child in self.childrens:
             ret += child.__repr__(level + 1)
         return ret
 
-    def convert2Json(self):
-        infoname,regex = self.value.split('~')
-
-        for child in self.childrens:
-            self.convert2Json()
+    def convert2json(self, root=None):
+        if self.value is None or self.value == '':
+            infoname = None
+            pattern = r"%s.:(.*?)" % self.name
+            regex = []
+            root.append({"infoname": infoname, "pattern": pattern, "regex": regex})
+            for child in self.childrens:
+                child.convert2json(regex)
+        else:
+            infoname, pattern = self.value.split('~', 1)
+            regex = None
+            root.append({"infoname": infoname, "pattern": pattern, "regex": regex})
 
 
 def gen_config_1_json(pcapfile, frame_ids):
@@ -122,7 +129,6 @@ def mergeTree(total_tree, single_root):
 
 
 def parse_locations(locs):
-    locs = json.loads(locs)
     # 遍历location中的response。。requestBody
     loc_tree = []
     for loc in locs:
@@ -147,8 +153,22 @@ def parse_locations(locs):
     return loc_tree
 
 
+def travel_reg_tree(reg_tree, pack):
+    if reg_tree is None:
+        return
+
+    for child in reg_tree.childrens:
+        travel_reg_tree(child, pack)
 
 
-def pack_senddata(reg_tree, info, **kw):
-
-    pass
+def pack_senddata(reg_tree, infos, **kw):
+    pack = {}
+    # 添加inof信息
+    pack['info'] = []
+    pack['locations'] = {}
+    for info in infos:
+        pack['info'].append(info)
+    # 添加regx信息
+    pack['locations']['responsebody'] = []
+    reg_tree[0].convert2json(pack['locations']['responsebody'])
+    return json.dumps(pack)
