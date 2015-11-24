@@ -68,6 +68,26 @@
     <div class="ui five wide column">
         <div class="ui segment" style="position: fixed;width:25%;">
             <a class="ui orange ribbon label"  style="bottom:10px;">Selected Details</a>
+            <table class="ui padded table">
+                <thead>
+                    <tr>
+                      <th>infoName</th>
+                      <th>infoValue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for _info in info %}
+                    <tr>
+                        <td>{{_info}}</td>
+                        <td>
+                            <div class="ui form input">
+                                <input id="{{_info}}" type="text">
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
             <table class="ui striped table">
               <thead>
                 <tr>
@@ -258,16 +278,25 @@
 <!--实现传送sendData数据    -->
     $('#sendToService').on("click",function(e){
         var sendData={};
-        sendData.infoDef=[
-            {
-                "name": "sourcefrom",
-                "value": "58同程"
-            },
-            {
-                "name": "coordtype",
-                "value": "GPS"
-            }
-        ];
+        <!--sendData.infoDef=[-->
+            <!--{-->
+                <!--"name": "sourcefrom",-->
+                <!--"value": "58同程"-->
+            <!--},-->
+            <!--{-->
+                <!--"name": "coordtype",-->
+                <!--"value": "GPS"-->
+            <!--}-->
+        <!--];-->
+        var infoDef=[];
+        {% for _info in info %}
+            var info_detail={};
+            info_detail['name']="{{_info}}";
+            var value=$('#{{_info}}').val();
+            info_detail['value']=value;
+            infoDef.push(info_detail);
+        {% endfor %}
+        sendData.infoDef=infoDef;
         var requestHead=[];
         var requestBody=[];
         var responseHead=[];
@@ -295,7 +324,6 @@
                 delete info[key];
         }
         sendData.locations=info;
-        console.log(sendData);
         $.ajax({
             type: 'POST',
             async: true,
