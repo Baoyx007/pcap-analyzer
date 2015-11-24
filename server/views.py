@@ -5,8 +5,10 @@
 from server.func import *
 from server.autogen import *
 from flask import session, flash
+
 global MID_DATA_LIST
-MID_DATA_LIST=[]
+MID_DATA_LIST = []
+
 
 # 主页
 @app.route('/')
@@ -87,7 +89,7 @@ def packetdetail(id, num):
 
 # 产生中间配置1
 # TODO 产生的配置要保存到cookie中
-@app.route('/autogen_1/<id>', methods=['POST','GET'])
+@app.route('/autogen_1/<id>', methods=['POST', 'GET'])
 def gen_config_1(id):
     global MID_DATA_LIST
     if request.method == 'POST':
@@ -101,10 +103,9 @@ def gen_config_1(id):
         MID_DATA_LIST = gen_config_1_json(file, ids_int)
         return render_template("gen_1.html")
     elif request.method == 'GET':
-        mid_data=MID_DATA_LIST
-        MID_DATA_LIST=[]
+        mid_data = MID_DATA_LIST
+        MID_DATA_LIST = []
         return render_template('gen_1.html', DataList=mid_data)
-
 
 
 # 读取pair中的请求对，返还给前端

@@ -4,4 +4,6 @@ pyshark==0.3.3
 chartkick==0.4.2
 Logbook==0.7.0
 simplejson
-Flask-SQLAlchemy=2.1
+Flask-SQLAlchemy==2.1
+scapy
+gevent
