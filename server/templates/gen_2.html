@@ -25,12 +25,10 @@
                 </div>
                 <div class="ui segment">
                     <p>Request Body</p>
-
                     <p style="word-break:break-word;" id="requestBody">{{frame[0]['req_b'].decode('utf8')}}</p>
                 </div>
                 <div class="ui segment">
                     <p>Response Header</p>
-
                     <p id="responseHead">
                         {% for req in frame[0]['res_h'].split('\n')%}
                             {{req}}
@@ -95,7 +93,7 @@
                   <th>Value</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="body">
                 {% for i in xx_interface%}
                 <tr>
                     <td align="right">{{i}}</td>
@@ -125,6 +123,10 @@
             {% endfor %}
         </div>
     </div>
+    <div class="ui flowing popup bottom left transition" id="hide2" style="position: fixed">
+        <div class="ui divided selection list" id="hide2_div">
+        </div>
+    </div>
 </div>
 </body>
 </html>
@@ -135,6 +137,9 @@
     <script src="{{ url_for('static', filename='js/jquery.jsontreeviewer.js') }}"></script>
 <script>
     $(document).ready(function () {
+    var str="";
+    var now_resh="";
+    var now_reqh="";
     var interface = new Array();
     {% for f in xx_interface %}
     interface.push("{{f}}");
@@ -167,12 +172,12 @@
     }
     function getSplit(text){
         var array=text.split('\n');
-        var str="";
+        var str1="";
         for(var j=0;j<array.length;j++)
         {
-            str+=array[j]+"<br>"
+            str1+=array[j]+"<br>"
         }
-        return str;
+        return str1;
     }
     function clickToText(){
         var path = $('#pathtonode').html();
@@ -217,6 +222,13 @@
                 $('#responseHead').html(getSplit(frame[i]['res_h']));
                 $('#responseBody').html(res_b[i]);
                 JSONTREEVIEWER.processJSONTree($('#responseBody').text());
+                str="";
+                str+=frame[i]['req_h'];
+                now_reqh=frame[i]['req_h'];
+                str+=$('#requestBody').html();
+                str+=frame[i]['res_h'];
+                now_resh=frame[i]['res_h'];
+                str+=$('#responseBody').html();
             } else {
                 alert("This is the first!");
             }
@@ -230,6 +242,13 @@
                 $('#responseHead').html(getSplit(frame[i]['res_h']));
                 $('#responseBody').html(res_b[i]);
                 JSONTREEVIEWER.processJSONTree($('#responseBody').text());
+                str="";
+                str+=frame[i]['req_h'];
+                now_reqh=frame[i]['req_h'];
+                str+=$('#requestBody').html();
+                str+=frame[i]['res_h'];
+                now_resh=frame[i]['res_h'];
+                str+=$('#responseBody').html();
             } else {
                 alert("This is the last!");
             }
@@ -274,7 +293,59 @@
     $('#show_tree').on("click",function (e) {
         $('#bottom_div').css("display","block");
     });
+<!--实现正则表达式匹配-->
+    str+=frame[0]['req_h'];
+    now_reqh=frame[0]['req_h'];
+    str+=$('#requestBody').html();
+    str+=frame[0]['res_h'];
+    now_resh=frame[0]['res_h'];
+    str+=$('#responseBody').html();
+    $('#body input').focus(function() {
+        if (!$('#hide2').is('.hidden')) {
+            $("#hide2").addClass('hidden');
+        }
+	});
+	$('#body input').blur(function() {
+	    var val=$(this).val();
+	    if(val!="")
+	    {
+            var result=[];
+            var patt=new RegExp($(this).val(),"g");
+            do{
+                var re=patt.exec(str);
+                result.push(re);
+            }while(re!=null)
+            var html="";
+            for(var i=0;i<result.length-1;i++)
+            {
+                html+="<a class='item'>"+result[i]+"</a>";
+            }
+            $("#hide2_div").html(html);
+            $("#hide2").removeClass('hidden');
+            $("#hide2").css({"left": $(this).offset().left, "top": $(this).offset().top-document.body.scrollTop+35}).fadeIn();
+            $("#hide2").css({"width": 200}).fadeIn();
+            $('#hide2 a:odd').css('background-color','#FFFAFA');
+            if(result.length==2){
+                var td=$(this).parents('tr').prev().find("td").next();
+                if(patt.test($('#responseBody').html())==true)
+                    td.attr('name','responseBody');
+                else if(patt.test($('#requestBody').html())==true)
+                    td.attr('name','requestBody');
+                else if(patt.test(now_reqh)==true)
+                    td.attr('name','requestHead');
+                else if(patt.test(now_resh)==true)
+                    td.attr('name','responseHead');
+                td.text(result[0]);
+            }
+        }
+         $("#hide2").on("click",function(){
+	        if (!$('#hide2').is('.hidden')) {
+            $("#hide2").addClass('hidden');
+            }
+	    });
+	});
 
+<!--正则表达式结束-->
 <!--实现传送sendData数据    -->
     $('#sendToService').on("click",function(e){
         var sendData={};
@@ -324,6 +395,7 @@
                 delete info[key];
         }
         sendData.locations=info;
+        console.log(sendData);
         $.ajax({
             type: 'POST',
             async: true,
@@ -331,11 +403,9 @@
             url: '/autogen_2_filter',
             data: $.toJSON(sendData),
             success: function (response) {
-
             }
         });
     });
-
 <!--结束传送sendData数据-->
 });
 </script>
