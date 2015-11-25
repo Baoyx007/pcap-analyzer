@@ -256,32 +256,46 @@
                     }
                 });
                 $("#send-button").click(function () {
-                    if (arrayid.length > 0) {
-                        var url_id = window.location.href.split('?')[0].substring(30);
-                        var ids = {"frameids": arrayid.join(',')};
-                        var isSuccess=false;
-                        var content;
-                        $.ajax({
-                            type: 'POST',
-                            async: false,
-                            contentType: 'application/json; charset=utf-8',
-                            url: '/autogen_1/' + url_id,
-                            data: $.toJSON(ids),
-                            success: function () {
-                                isSuccess=true;
-                                <!--content=response;-->
+
+                    $('#addname').modal({
+                        closable  : true,
+                        allowMultiple: false,
+                        onDeny    : function(){
+                            return true;
+                        },
+                        onApprove : function() {
+                            var name=$("#input").val();
+                            if(name!=""){
+                                if (arrayid.length > 0) {
+                                    var url_id = window.location.href.split('?')[0].substring(30);
+                                    var type=window.location.href.split('=')[3];
+                                    var ids = {"frameids": arrayid.join(','),"name":name,"type":type};
+                                    var isSuccess=false;
+                                    var content;
+                                    $.ajax({
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: 'application/json; charset=utf-8',
+                                        url: '/autogen_1/' + url_id,
+                                        data: $.toJSON(ids),
+                                        success: function () {
+                                            isSuccess=true;
+                                            <!--content=response;-->
+                                        }
+                                    });
+                                    if(isSuccess==true)
+                                    {
+                                        window.open("/autogen_1/" + url_id);
+                                        <!--makeNewWindow();-->
+                                        <!--subWrite(content);-->
+                                    }
+                                }
+                                else {
+                                    alert("Nothing has been selected!");
+                                }
                             }
-                        });
-                        if(isSuccess==true)
-                        {
-                            window.open("/autogen_1/" + url_id);
-                            <!--makeNewWindow();-->
-                            <!--subWrite(content);-->
                         }
-                    }
-                    else {
-                        alert("Nothing has been selected!");
-                    }
+                    }).modal('show');
                 });
             });
         </script>
@@ -294,7 +308,24 @@
         <i class="send icon"></i>Send
     </div>
 </div>
-
+<div class="ui small ok modal" id='addname'>
+	    <div class="header">
+	      Input Name:
+	    </div>
+            <div class="ui labeled input" style="width:100%">
+                  <div class="ui label">NAME</div>
+                  <input type="text" id="input">
+            </div>
+	    <div class="actions">
+            <div class="ui negative button">
+	            No
+	        </div>
+	        <div class="ui positive right labeled icon button">
+	            Yes
+	        <i class="checkmark icon"></i>
+	        </div>
+	    </div>
+</div>
 <!-- div class="ui bottom attached tab segment" data-tab="fifth">
     <div class="ui raised segment">
     <a class="ui red ribbon label">Mail Packets</a>
@@ -305,7 +336,7 @@
         </div>
     </div>
 </div -->
-</div>
+
 <style type="text/css">
     table tbody td {
         word-break: break-all;
