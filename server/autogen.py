@@ -3,6 +3,7 @@ import os
 import pyshark
 from server import UPLOAD_FOLDER
 import simplejson as json
+from time import localtime, strftime
 
 __author__ = 'PCPC'
 
@@ -104,13 +105,18 @@ def get_interface(business):
 # 将一条叶子节点到root的路径合并到树中
 def mergeTree(total_tree, single_root):
     if total_tree is None:
-        return single_root
-    # 先判断他们是不是一个树
-    if total_tree.name != single_root.name:
-        return total_tree.append(single_root)
+        return [single_root]
+    # 先判sigle_root 有没有可能是total_tree中的一个树
+    same_root = None
+    for tree in total_tree:
+        if tree.name == single_root.name:
+            same_root = tree
+    if same_root is None:
+        total_tree.append(single_root)
+        return total_tree
     # pt比p大一层
     p = single_root.childrens[0]
-    pt = total_tree
+    pt = same_root
     # 每层节点对比
     while p is not None or pt is not None:
         i = 0
@@ -149,26 +155,24 @@ def parse_locations(locs):
 
             p.value = info['infoname'] + '~' + info['regex']
             total_tree = mergeTree(total_tree, root)
-        loc_tree.append(total_tree)
+        loc_tree.append((total_tree, loc))
     return loc_tree
 
 
-def travel_reg_tree(reg_tree, pack):
-    if reg_tree is None:
-        return
-
-    for child in reg_tree.childrens:
-        travel_reg_tree(child, pack)
-
-
-def pack_senddata(reg_tree, infos, **kw):
-    pack = {}
+def pack_senddata(reg_trees, infos, **kw):
+    pack = {"time": strftime("%Y-%m-%d %H:%M:%S", localtime()), 'info': [], 'locations': {}}
     # 添加inof信息
-    pack['info'] = []
-    pack['locations'] = {}
     for info in infos:
         pack['info'].append(info)
     # 添加regx信息
-    pack['locations']['responsebody'] = []
-    reg_tree[0].convert2json(pack['locations']['responsebody'])
+    pack['locations'] = {}
+    # 遍历locations
+    for tree in reg_trees:
+        regs = tree[0]
+        name = tree[1]
+        pack['locations'][name] = []
+        for reg in regs:
+            tmp = []
+            reg.convert2json(tmp)
+            pack['locations'][name] += tmp
     return json.dumps(pack)

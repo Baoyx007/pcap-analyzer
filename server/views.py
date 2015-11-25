@@ -121,12 +121,14 @@ def gen_config_2(id):
 
 @app.route('/autogen_2_filter', methods=['POST'])
 def gen_config_2_filter():
+    # locations 中是regex树
     locs = request.get_json()['locations']
     locs_send = parse_locations(locs)
     print(locs_send)
     pack = pack_senddata(locs_send, request.get_json()['infoDef'])
     print(pack)
-
+    # 另外一种解析方式 content.*?point.*?x":"([^"]*)
+    # 展示可以选择不解析
     return 'ok'
 
 
