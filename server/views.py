@@ -6,9 +6,6 @@ from server.func import *
 from server.autogen import *
 from flask import session, flash
 
-global MID_DATA_LIST
-MID_DATA_LIST = []
-
 
 # 主页
 @app.route('/')
@@ -100,11 +97,11 @@ def gen_config_1(id):
         ids_int = []
         for id in frame_ids.split(','):
             ids_int.append(int(id))
-        MID_DATA_LIST = gen_config_1_json(file, ids_int)
+        session['MID_DATA_LIST'] = gen_config_1_json(file, ids_int)
         return render_template("gen_1.html")
     elif request.method == 'GET':
-        mid_data = MID_DATA_LIST
-        MID_DATA_LIST = []
+        mid_data = session['MID_DATA_LIST']
+        session.pop('MID_DATA_LIST', None)
         return render_template('gen_1.html', DataList=mid_data)
 
 
