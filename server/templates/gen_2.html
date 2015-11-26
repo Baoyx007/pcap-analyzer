@@ -10,7 +10,7 @@
 <div class="ui two column fitted stackable grid">
     <div class="ui eleven wide column">
         <div class="ui segment">
-            <a class="ui orange ribbon label" style="bottom:10px;">Packets Details</a>
+            <a class="ui orange ribbon label" style="bottom:10px;">Packets Details&nbsp&nbsp<i class="large green checkmark icon" id="check"></i></a>
 
             <div class="ui segments" id="segment_one">
                 <div class="ui segment">
@@ -51,9 +51,12 @@
                     </div>
             </div>
             <br>
-            <div style="float:right">
+            <div>
                     <div class="ui black small right floated button" id="sendToService">
-                        <i class="send icon"></i>Second Analyze
+                        <i class="send icon"></i>Send Details
+                    </div>
+                    <div class="ui black small right floated button" id="saveButton">
+                        <i class="download icon"></i>Save Details
                     </div>
                     <div class="ui buttons">
                       <button class="ui labeled icon button blue" id="back"><i class="left chevron icon"></i> Back </button>
@@ -73,7 +76,7 @@
                       <th>infoValue</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="infoValue">
                 {% for _info in info %}
                     <tr>
                         <td>{{_info}}</td>
@@ -216,19 +219,25 @@
         });
         $('#back').on("click", function () {
             if (i - 1 >= 0) {
-                i = i - 1;
-                $('#requestHead').html(getSplit(frame[i]['req_h']));
-                $('#requestBody').html(req_b[i]);
-                $('#responseHead').html(getSplit(frame[i]['res_h']));
-                $('#responseBody').html(res_b[i]);
-                JSONTREEVIEWER.processJSONTree($('#responseBody').text());
-                str="";
-                str+=frame[i]['req_h'];
-                now_reqh=frame[i]['req_h'];
-                str+=$('#requestBody').html();
-                str+=frame[i]['res_h'];
-                now_resh=frame[i]['res_h'];
-                str+=$('#responseBody').html();
+                if(hasSave()==true){
+                    i = i - 1;
+                    $('#requestHead').html(getSplit(frame[i]['req_h']));
+                    $('#requestBody').html(req_b[i]);
+                    $('#responseHead').html(getSplit(frame[i]['res_h']));
+                    $('#responseBody').html(res_b[i]);
+                    JSONTREEVIEWER.processJSONTree($('#responseBody').text());
+                    str="";
+                    str+=frame[i]['req_h'];
+                    now_reqh=frame[i]['req_h'];
+                    str+=$('#requestBody').html();
+                    str+=frame[i]['res_h'];
+                    now_resh=frame[i]['res_h'];
+                    str+=$('#responseBody').html();
+                    isFinish();
+                }else{
+                    alert("please Save Details first!")
+                    $("#saveButton").css("background","red");
+                }
             } else {
                 alert("This is the first!");
             }
@@ -236,19 +245,25 @@
 
         $('#forward').on("click", function () {
             if (i + 1 < size) {
-                i = i + 1;
-                $('#requestHead').html(getSplit(frame[i]['req_h']));
-                $('#requestBody').html(req_b[i]);
-                $('#responseHead').html(getSplit(frame[i]['res_h']));
-                $('#responseBody').html(res_b[i]);
-                JSONTREEVIEWER.processJSONTree($('#responseBody').text());
-                str="";
-                str+=frame[i]['req_h'];
-                now_reqh=frame[i]['req_h'];
-                str+=$('#requestBody').html();
-                str+=frame[i]['res_h'];
-                now_resh=frame[i]['res_h'];
-                str+=$('#responseBody').html();
+                if(hasSave()==true){
+                    i = i + 1;
+                    $('#requestHead').html(getSplit(frame[i]['req_h']));
+                    $('#requestBody').html(req_b[i]);
+                    $('#responseHead').html(getSplit(frame[i]['res_h']));
+                    $('#responseBody').html(res_b[i]);
+                    JSONTREEVIEWER.processJSONTree($('#responseBody').text());
+                    str="";
+                    str+=frame[i]['req_h'];
+                    now_reqh=frame[i]['req_h'];
+                    str+=$('#requestBody').html();
+                    str+=frame[i]['res_h'];
+                    now_resh=frame[i]['res_h'];
+                    str+=$('#responseBody').html();
+                    isFinish();
+                }else{
+                    alert("please Save Details first!")
+                    $("#saveButton").css("background","red");
+                }
             } else {
                 alert("This is the last!");
             }
@@ -311,10 +326,12 @@
 	    {
             var result=[];
             var patt=new RegExp($(this).val(),"g");
+            var setTime=0;
             do{
                 var re=patt.exec(str);
                 result.push(re);
-            }while(re!=null)
+                setTime+=1;
+            }while(re!=null&&setTime<20)
             var html="";
             for(var i=0;i<result.length-1;i++)
             {
@@ -346,8 +363,51 @@
 	});
 
 <!--正则表达式结束-->
-<!--实现传送sendData数据    -->
-    $('#sendToService').on("click",function(e){
+<!--清空details-->
+    function clearDetails(){
+        var tr=$("#infoValue tr");
+        {% for _info in info %}
+            tr.find("input").val("");
+            tr=tr.next();
+        {% endfor %}
+        <!--tr=$("#body tr");-->
+        {% for i in xx_interface%}
+            <!--tr.find("#{{i}}").html("");-->
+            <!--tr=tr.next();-->
+            <!--tr.find("input").val("");-->
+            <!--tr=tr.next();-->
+            $("#{{i}}").html("");
+            $('#{{i}}').parent().next().find("td div input").val("");
+        {% endfor %}
+    }
+
+<!--判断是否忘记保存-->
+    function hasSave(){
+        var isSave=true;
+        {% for i in xx_interface%}
+            if($("#{{i}}").html()!="" ||$('#{{i}}').parent().next().find("td div input").val()!="")
+                isSave=false;
+        {% endfor %}
+        return isSave;
+    }
+<!--实现判断本页是否已经完成-->
+    $("#check").css("display","none");
+    var finish=[];
+    for(var j=0;j<size;j++)
+    {
+        finish[j]=0;
+    }
+    function isFinish(){
+        if(finish[i]==1){
+            $("#check").removeAttr("style");
+        }else{
+            $("#check").css("display","none");
+        }
+    }
+<!--实现saveData功能-->
+    var data=[];
+    $("#saveButton").on("click",function(e){
+        $("#saveButton").css("background","black");
         var sendData={};
         <!--sendData.infoDef=[-->
             <!--{-->
@@ -395,16 +455,25 @@
                 delete info[key];
         }
         sendData.locations=info;
-        console.log(sendData);
+        data.push(sendData);
+        finish[i]=1;
+        isFinish();
+        clearDetails();
+    });
+
+<!--实现传送sendData数据    -->
+    $('#sendToService').on("click",function(e){
+        <!--console.log(data);-->
         $.ajax({
             type: 'POST',
             async: true,
             contentType: 'application/json; charset=utf-8',
             url: '/autogen_2_filter',
-            data: $.toJSON(sendData),
+            data: $.toJSON(data),
             success: function (response) {
             }
         });
+        data=[];
     });
 <!--结束传送sendData数据-->
 });
