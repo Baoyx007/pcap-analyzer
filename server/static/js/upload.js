@@ -18,7 +18,17 @@ $(document).ready(function() {
         cityToStr(text);
     });
 //Select City结束
-
+//实现Select Type
+    function typeToStr(text){
+        $("#typeMessage").html("Type:"+text);
+    }
+    var type_text=$("#searchType").find("option:selected").text();
+    typeToStr(type_text);
+    $("#searchType").change(function(){
+        type_text=$("#searchType").find("option:selected").text();
+        typeToStr(type_text);
+    });
+//Select Type结束
     $('#delete-button').on('click', function(){
         $('.small.del.modal').modal({
             closable  : true,
@@ -61,7 +71,7 @@ $(document).ready(function() {
         if(size > 0){  
             for(var i=0;i<size;i++){
                 param=delCheckbox.eq(i).val();
-                window.open('/analyze/'+param+'?longitude='+arry_ll[0]+'&latitude='+arry_ll[1]);
+                window.open('/analyze/'+param+'?longitude='+arry_ll[0]+'&latitude='+arry_ll[1]+'&type='+type_text);
                 }
         }
     });
