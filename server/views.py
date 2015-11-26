@@ -55,6 +55,7 @@ def analyze(id):
     dstport = get_port_dst(file)
     # 如生产环境需注意可能存在的XSS
     # pcapstat['mail'] = get_mail(file)
+    session['TYPE'] = request.args.get('type', 'LBS')
     coord_info = request.args
     pcapstat['web'], marked = get_web(file, coord_info)
     # dns, pcapstat['dnstable'] = get_dns(file)
@@ -88,7 +89,6 @@ def packetdetail(id, num):
 # TODO 产生的配置要保存到cookie中
 @app.route('/autogen_1/<id>', methods=['POST', 'GET'])
 def gen_config_1(id):
-    global MID_DATA_LIST
     if request.method == 'POST':
         frame_ids = request.get_json()['frameids']
         id = int(id)
@@ -98,6 +98,7 @@ def gen_config_1(id):
         for id in frame_ids.split(','):
             ids_int.append(int(id))
         session['MID_DATA_LIST'] = gen_config_1_json(file, ids_int)
+        session['NAME'] = "test"
         return render_template("gen_1.html")
     elif request.method == 'GET':
         mid_data = session['MID_DATA_LIST']
