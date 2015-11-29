@@ -17,7 +17,7 @@
                     <p>request header</p>
 
                     <p id="requestHead">
-                        {% for req in frame[0]['req_h'].split('\n')%}
+                        {% for req in frame[0]['req_h'].split('<br>')%}
                         {{req}}
                         <br>
                         {% endfor %}
@@ -26,7 +26,7 @@
                 <div class="ui segment">
                     <p>Request Body</p>
                     <p style="word-break:break-word;" id="requestBody">
-                        {% for req_b in frame[0]['req_b'].decode('utf8',errors='ignore').split('\n')%}
+                        {% for req_b in frame[0]['req_b'].decode('utf8',errors='ignore').split('<br>')%}
                             {{req_b}}
                             <br>
                         {% endfor %}
@@ -36,7 +36,7 @@
                 <div class="ui segment">
                     <p>Response Header</p>
                     <p id="responseHead">
-                        {% for req in frame[0]['res_h'].split('\n')%}
+                        {% for req in frame[0]['res_h'].split('<br>')%}
                             {{req}}
                             <br>
                         {% endfor %}
@@ -45,7 +45,7 @@
                 <div class="ui segment">
                         <p>Response Body</p>
                         <p style="word-break:break-word;" id="responseBody">
-                             {% for res_b in frame[0]['res_b'].decode('utf8',errors='ignore').split('\n')%}
+                             {% for res_b in frame[0]['res_b'].decode('utf8',errors='ignore').split('<br>')%}
                                 {{res_b}}
                                 <br>
                             {% endfor %}
@@ -169,13 +169,12 @@
     var frame = {{frame|safe}};
     var res_b=new Array();
     {% for f in frame%}
-        res_b.push("{{f['res_b'].decode('utf8',errors='ignore')}}");
+        res_b.push("{{f['res_b'].decode('utf8',errors='ignore') }}");
     {% endfor %}
     var req_b=new Array();
     {% for f in frame%}
-        req_b.push("{{f['req_b'].decode('utf8',errors='ignore')}}");
+        req_b.push("{{f['req_b'].decode('utf8',errors='ignore') }}");
     {% endfor %}
-
     var size=frame.length;
     var i=0;
 <!--功能函数-->
@@ -193,7 +192,7 @@
         }
     }
     function getSplit(text){
-        var array=text.split('\n');
+        var array=text.split('&lt;br&gt;');
         var str1="";
         for(var j=0;j<array.length;j++)
         {
@@ -240,10 +239,10 @@
             if (i - 1 >= 0) {
                 if(hasSave()==true){
                     i = i - 1;
-                    $('#requestHead').html(getSplit(frame[i]['req_h']));
-                    $('#requestBody').html(req_b[i]);
-                    $('#responseHead').html(getSplit(frame[i]['res_h']));
-                    $('#responseBody').html(res_b[i]);
+                    $('#requestHead').html(frame[i]['req_h']);
+                    $('#requestBody').html(getSplit(req_b[i]));
+                    $('#responseHead').html(frame[i]['res_h']);
+                    $('#responseBody').html(getSplit(res_b[i]));
                     JSONTREEVIEWER.processJSONTree($('#responseBody').text());
                     str="";
                     str+=frame[i]['req_h'];
@@ -267,9 +266,9 @@
                 if(hasSave()==true){
                     i = i + 1;
                     $('#requestHead').html(getSplit(frame[i]['req_h']));
-                    $('#requestBody').html(req_b[i]);
+                    $('#requestBody').html(getSplit(req_b[i]));
                     $('#responseHead').html(getSplit(frame[i]['res_h']));
-                    $('#responseBody').html(res_b[i]);
+                    $('#responseBody').html(getSplit(res_b[i]));
                     JSONTREEVIEWER.processJSONTree($('#responseBody').text());
                     str="";
                     str+=frame[i]['req_h'];
