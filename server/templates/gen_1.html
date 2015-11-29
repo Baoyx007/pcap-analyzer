@@ -7,6 +7,9 @@
         <script>
             $(document).ready(function(){
                 $('#body_color tr:even').css('background-color','#dddddd');
+                $("#download-button").on("click",function(){
+                    window.open('autogen_1/down');
+                });
             });
         </script>
     </head>
@@ -36,6 +39,9 @@
                       </tbody>
 
 		        </table>
+                <div class="ui red small right floated button" id="download-button">
+                    <i class="download icon"></i>Download
+                </div>
 	        </div>
 	    </div>
         <br>
