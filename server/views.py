@@ -107,7 +107,6 @@ def gen_config_1(id):
         return render_template("gen_1.html")
     elif request.method == 'GET':
         mid_data = session['MID_DATA_LIST']
-        #   session.pop('MID_DATA_LIST', None)
         return render_template('gen_1.html', DataList=mid_data)
 
 
@@ -115,6 +114,7 @@ def gen_config_1(id):
 @app.route('/autogen_1/down', methods=['GET'])
 def autogen_1_down():
     ChangeAtoB.gen_1_xml(session['MID_DATA_LIST'])
+    session.pop('MID_DATA_LIST', None)
     file = 'yj_hp_in.conf'
     return send_file("cfg/yj_hp_in.conf", attachment_filename=file, as_attachment=True)
 
