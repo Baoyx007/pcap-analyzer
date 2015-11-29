@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author: le4f.net
 
-from flask import Flask, request, redirect, url_for, send_file, render_template, g
+from flask import Flask, request, redirect, url_for, send_file, render_template, g, make_response
 from werkzeug.utils import secure_filename
 from cStringIO import StringIO
 from collections import Counter

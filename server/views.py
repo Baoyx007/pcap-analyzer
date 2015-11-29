@@ -130,17 +130,36 @@ def gen_config_2(id):
     return render_template('gen_2.html', frame=pair, xx_interface=xx_interface, info=info)
 
 
-@app.route('/autogen_2_filter', methods=['POST'])
+# data1 是site的 信息
+# data2 是filter的信息
+@app.route('/autogen_2_filter', methods=['POST', 'GET'])
 def gen_config_2_filter():
-    # locations 中是regex树
-    locs = request.get_json()['locations']
-    locs_send = parse_locations(locs)
-    print(locs_send)
-    pack = pack_senddata(locs_send, request.get_json()['infoDef'])
-    print(pack)
-    # 另外一种解析方式 content.*?point.*?x":"([^"]*)
-    # 展示可以选择不解析
-    return 'ok'
+    if request.method == 'POST':
+        filters = []
+        # 为每个filter创建一个pack
+        for my_filter in request.get_json():
+            # locations 中是regex树
+            locs = my_filter['locations']
+            locs_send = parse_locations(locs)
+            print(locs_send)
+            pack = pack_senddata(locs_send, my_filter['infoDef'])
+            print(pack)
+            filters.append(pack)
+        # 另外一种解析方式 content.*?point.*?x":"([^"]*)
+        # 占时可以选择不解析
+        data1 = {"host": "58", "name": "dd", "type": "lbs", "url": "desf/sef/sdf"}
+        session['data1'] = data1
+        session['data2'] = simplejson.loads(pack)
+
+        return 'success'
+    elif request.method == 'GET':
+        template = render_template('template.xml', data1=session['data1'], data2=session['data2'])
+        session.pop('data1', None)
+        session.pop('data2', None)
+
+        response = make_response(template)
+        response.headers['Content-Type'] = 'application/xml'
+        return response
 
 
 # 删除包

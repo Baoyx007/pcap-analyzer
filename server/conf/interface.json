@@ -7,5 +7,18 @@
     "LNG",
     "RADUIS"
   ],
-  "INFO":["sourcefrom","coordtype"]
+  "INFO": [
+    "sourcefrom",
+    "coordtype"
+  ],
+  "TXL": [
+    "NAME",
+    "NICKNAME",
+    "NOTE",
+    "RELATION",
+    "ORG",
+    "MOBILE",
+    "EMAIL",
+    "ADDR"
+  ]
 }
