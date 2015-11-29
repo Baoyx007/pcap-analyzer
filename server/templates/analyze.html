@@ -265,13 +265,13 @@
                         },
                         onApprove : function() {
                             var name=$("#input").val();
-                            if(name!=""){
+                            var domain=$("#input2").val();
+                            if(name!="" && domain !=""){
                                 if (arrayid.length > 0) {
                                     var url_id = window.location.href.split('?')[0].substring(30);
                                     var type=window.location.href.split('=')[3];
-                                    var ids = {"frameids": arrayid.join(','),"name":name,"type":type};
+                                    var ids = {"frameids": arrayid.join(','),"name":name,"type":type,"domain":domain};
                                     var isSuccess=false;
-                                    var content;
                                     $.ajax({
                                         type: 'POST',
                                         async: false,
@@ -280,14 +280,11 @@
                                         data: $.toJSON(ids),
                                         success: function () {
                                             isSuccess=true;
-                                            <!--content=response;-->
                                         }
                                     });
                                     if(isSuccess==true)
                                     {
                                         window.open("/autogen_1/" + url_id);
-                                        <!--makeNewWindow();-->
-                                        <!--subWrite(content);-->
                                     }
                                 }
                                 else {
@@ -310,11 +307,15 @@
 </div>
 <div class="ui small ok modal" id='addname'>
 	    <div class="header">
-	      Input Name:
+	      分析应用的名称(英文):
 	    </div>
             <div class="ui labeled input" style="width:100%">
                   <div class="ui label">NAME</div>
                   <input type="text" id="input">
+            </div>
+            <div class="ui labeled input" style="width:100%">
+                  <div class="ui label">DOMAIN</div>
+                  <input type="text" id="input2">
             </div>
 	    <div class="actions">
             <div class="ui negative button">
@@ -326,16 +327,6 @@
 	        </div>
 	    </div>
 </div>
-<!-- div class="ui bottom attached tab segment" data-tab="fifth">
-    <div class="ui raised segment">
-    <a class="ui red ribbon label">Mail Packets</a>
-        <div class="ui black segment">
-            {% autoescape false %}
-            {{pcapstat.mail}}
-            {% endautoescape %}
-        </div>
-    </div>
-</div -->
 
 <style type="text/css">
     table tbody td {

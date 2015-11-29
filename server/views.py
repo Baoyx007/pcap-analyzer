@@ -56,7 +56,8 @@ def analyze(id):
     # 如生产环境需注意可能存在的XSS
     # pcapstat['mail'] = get_mail(file)
     session['TYPE'] = request.args.get('type', 'LBS')
-    coord_info = request.args
+    coord_info = request.args.to_dict()
+    coord_info.pop('type')
     pcapstat['web'], marked = get_web(file, coord_info)
     # dns, pcapstat['dnstable'] = get_dns(file)
     pcapstat['ipsrc'] = dict(ipsrc)
@@ -91,14 +92,18 @@ def packetdetail(id, num):
 def gen_config_1(id):
     if request.method == 'POST':
         frame_ids = request.get_json()['frameids']
+        name = request.get_json()['name']
+        businesss_type = request.get_json()['type']
+        session['TYPE'] = businesss_type
+        session['NAME'] = name
         id = int(id)
         # TODO 文件可能不存在
         file = get_pcap_entries(id)[0]['filename']
         ids_int = []
         for id in frame_ids.split(','):
             ids_int.append(int(id))
-        session['MID_DATA_LIST'] = gen_config_1_json(file, ids_int)
-        session['NAME'] = "test"
+
+        session['MID_DATA_LIST'] = gen_config_1_json(file, ids_int, businesss_type, name)
         return render_template("gen_1.html")
     elif request.method == 'GET':
         mid_data = session['MID_DATA_LIST']

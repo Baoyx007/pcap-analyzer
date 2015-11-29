@@ -34,7 +34,7 @@ class RegexTree:
             root.append({"infoname": infoname, "pattern": pattern, "regex": regex})
 
 
-def gen_config_1_json(pcapfile, frame_ids):
+def gen_config_1_json(pcapfile, frame_ids, businesss_type='LBS', name=''):
     cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, pcapfile))
     data_list = []
     for id in frame_ids:
@@ -45,13 +45,13 @@ def gen_config_1_json(pcapfile, frame_ids):
         # 分为req和response
         if hasattr(package.http, 'request'):
             # TODO 以后要增加TXL
-            mid_data = extract_mid_data(package)
+            mid_data = extract_mid_data(package, businesss_type, name)
         else:
             if hasattr(package.http, 'request_in'):
                 req_id = int(package.http.request_in)
             else:
                 req_id = int(package.http.prev_request_in)
-            mid_data = extract_mid_data(cap[req_id - 1])
+            mid_data = extract_mid_data(cap[req_id - 1], businesss_type, name)
 
         data_list.append(mid_data)
 
@@ -60,12 +60,12 @@ def gen_config_1_json(pcapfile, frame_ids):
     return data_list
 
 
-def extract_mid_data(package):
-    mid_data = dict(TYPE='LBS')
+def extract_mid_data(package, businesss_type='LBS', name=''):
+    mid_data = dict(TYPE=businesss_type)
     mid_data['HOST'] = package.http.host
     mid_data['URL'] = package.http.request_uri
     mid_data['METHOD'] = package.http.request_method
-    mid_data['NAME'] = package.http.host
+    mid_data['NAME'] = name
     return mid_data
 
 
