@@ -72,8 +72,8 @@
             <table class="ui padded table">
                 <thead>
                     <tr>
-                      <th>infoName</th>
-                      <th>infoValue</th>
+                        <th>infoName</th>
+                        <th>infoValue</th>
                     </tr>
                 </thead>
                 <tbody id="infoValue">
@@ -92,8 +92,9 @@
             <table class="ui striped table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Value</th>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th width="30%">Type</th>
                 </tr>
               </thead>
               <tbody id="body">
@@ -110,6 +111,13 @@
                     <div class="ui fluid action input">
                       <input type="text">
                     </div>
+                    </td>
+                    <td>
+                        <select  class="ui search">
+                            <option value="default">default</option>
+                            <option value="unlimited">unlimited</option>
+                            <option value="split">split</option>
+                        </select>
                     </td>
                 </tr>
                 {% endfor %}
@@ -445,6 +453,8 @@
                 i_detail['value']=$('#{{i}}').text();
                 var regEx=$('#{{i}}').parent().next().find("td div input").val();
                 i_detail['regex']=regEx;
+                var regexType=$('#{{i}}').parent().next().find("td select").find("option:selected").text();
+                i_detail['regexType']=regexType;
                 var name=$('#{{i}}').attr('name');
                 info[name].push(i_detail);
             }
@@ -455,6 +465,15 @@
                 delete info[key];
         }
         sendData.locations=info;
+        var patt=new RegExp("Host:([^\r\n]*)");
+        var host=patt.exec(now_reqh)[1];
+        sendData.host=host;
+        var patt2=new RegExp("([^\r\n]*?) (.*?) HTTP/1.1");
+        var r =patt2.exec(now_reqh);
+        var method=r[1];
+        var url=r[2];
+        sendData.method=method;
+        sendData.url=url;
         data.push(sendData);
         finish[i]=1;
         isFinish();
@@ -463,7 +482,7 @@
 
 <!--实现传送sendData数据    -->
     $('#sendToService').on("click",function(e){
-        <!--console.log(data);-->
+        console.log(data);
         $.ajax({
             type: 'POST',
             async: true,
