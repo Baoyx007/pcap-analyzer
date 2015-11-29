@@ -490,6 +490,10 @@
             url: '/autogen_2_filter',
             data: $.toJSON(data),
             success: function (response) {
+                if(response=="success")
+                {
+                    window.open("/autogen_2_filter");
+                }
             }
         });
         data=[];

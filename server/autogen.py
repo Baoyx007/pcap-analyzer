@@ -161,6 +161,7 @@ def parse_locations(locs):
 
 def pack_senddata(reg_trees, infos, **kw):
     pack = {"time": strftime("%Y-%m-%d %H:%M:%S", localtime()), 'info': [], 'locations': {}}
+    pack.update(kw)
     # 添加inof信息
     for info in infos:
         pack['info'].append(info)

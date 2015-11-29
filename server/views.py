@@ -142,14 +142,15 @@ def gen_config_2_filter():
             locs = my_filter['locations']
             locs_send = parse_locations(locs)
             print(locs_send)
-            pack = pack_senddata(locs_send, my_filter['infoDef'])
+            pack = pack_senddata(locs_send, my_filter['infoDef'], host=my_filter['host'].strip(), url=my_filter['url'],
+                                 method=my_filter['method'])
             print(pack)
-            filters.append(pack)
+            filters.append(simplejson.loads(pack))
         # 另外一种解析方式 content.*?point.*?x":"([^"]*)
         # 占时可以选择不解析
-        data1 = {"host": "58", "name": "dd", "type": "lbs", "url": "desf/sef/sdf"}
+        data1 = {"name": session['NAME'], "type": session['TYPE']}
         session['data1'] = data1
-        session['data2'] = simplejson.loads(pack)
+        session['data2'] = filters
 
         return 'success'
     elif request.method == 'GET':
