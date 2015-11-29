@@ -125,8 +125,13 @@ def gen_config_2(id):
     # 遍历所有产生的请求对
     # cookie 记录遍历到第几对
     pair = read_pair('server/pair')
-    xx_interface = get_interface('LBS')
-    info = get_interface('INFO')
+    business_type = request.args.get('type', 'TXL')
+    if business_type == 'LBS':
+        xx_interface = get_interface('LBS')
+        info = get_interface('INFO_TXL')
+    elif business_type == 'TXL':
+        xx_interface = get_interface('TXL')
+        info = get_interface('INFO_TXL')
     return render_template('gen_2.html', frame=pair, xx_interface=xx_interface, info=info)
 
 

@@ -7,11 +7,16 @@
     "LNG",
     "RADUIS"
   ],
-  "INFO": [
+  "INFO_LBS": [
     "sourcefrom",
     "coordtype"
   ],
+  "INFO_TXL": [
+    "sourcefrom"
+  ],
   "TXL": [
+    "contact_split",
+    "info_split",
     "NAME",
     "NICKNAME",
     "NOTE",

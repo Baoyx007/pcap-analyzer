@@ -4,7 +4,7 @@ import pyshark
 from server import UPLOAD_FOLDER
 import simplejson as json
 from time import localtime, strftime
-
+import re
 __author__ = 'PCPC'
 
 
@@ -76,23 +76,27 @@ def read_pair(path):
     pairs.sort(cmp=lambda x, y: cmp(os.path.getctime(x), os.path.getctime(y)), reverse=True)
     # 每个frame分为4个部分request_head,request_body,response_head,response_body
     frame_list = list()
+    p = re.compile(r'\n')
     for i in range(0, len(pairs), 2):
         # print(pairs[i],pairs[i+1])
         frame = dict()
-        with open(pairs[i]) as f:
+        with open(pairs[i], 'rU') as f:
             req = f.read().split('\n\n', 1)
             frame['req_h'] = req[0]
             if len(req) > 1:
                 frame['req_b'] = req[1]
-        with open(pairs[i + 1]) as f:
+            else:
+                frame['req_b'] = ''
+        with open(pairs[i + 1], 'rU') as f:
             res = f.read().split('\n\n', 1)
             frame['res_h'] = res[0]
             if len(res) > 1:
                 frame['res_b'] = res[1]
+            else:
+                frame['res_b'] = ''
+        # for k in frame.keys():
+        #     frame[k] = p.sub(r'<br>', frame[k])
         frame_list.append(frame)
-    # p = re.compile(r'\n')
-    # for k in frame.keys():
-    #     frame[k] = p.sub(r'<br>', frame[k])
     return frame_list
 
 

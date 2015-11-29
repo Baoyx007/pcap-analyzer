@@ -25,7 +25,13 @@
                 </div>
                 <div class="ui segment">
                     <p>Request Body</p>
-                    <p style="word-break:break-word;" id="requestBody">{{frame[0]['req_b'].decode('utf8')}}</p>
+                    <p style="word-break:break-word;" id="requestBody">
+                        {% for req_b in frame[0]['req_b'].decode('utf8',errors='ignore').split('\n')%}
+                            {{req_b}}
+                            <br>
+                        {% endfor %}
+                    </p>
+
                 </div>
                 <div class="ui segment">
                     <p>Response Header</p>
@@ -38,7 +44,12 @@
                     </div>
                 <div class="ui segment">
                         <p>Response Body</p>
-                        <p style="word-break:break-word;" id="responseBody">{{frame[0]['res_b'].decode('utf8')}}</p>
+                        <p style="word-break:break-word;" id="responseBody">
+                             {% for res_b in frame[0]['res_b'].decode('utf8',errors='ignore').split('\n')%}
+                                {{res_b}}
+                                <br>
+                            {% endfor %}
+                        </p>
                         <div class="ui small button" id="show_tree">Show Json Trees(json格式)</div>
                         <div class="ui segment" style="display:none" id="bottom_div">
                             <a class="ui orange ribbon label">Trees Details</a>
@@ -158,11 +169,11 @@
     var frame = {{frame|safe}};
     var res_b=new Array();
     {% for f in frame%}
-        res_b.push("{{f['res_b'].decode('utf8')}}");
+        res_b.push("{{f['res_b'].decode('utf8',errors='ignore')}}");
     {% endfor %}
     var req_b=new Array();
     {% for f in frame%}
-        req_b.push("{{f['req_b'].decode('utf8')}}");
+        req_b.push("{{f['req_b'].decode('utf8',errors='ignore')}}");
     {% endfor %}
 
     var size=frame.length;
