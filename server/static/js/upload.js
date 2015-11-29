@@ -82,7 +82,7 @@ $(document).ready(function() {
         if(size > 0){
             for(var i=0;i<size;i++){
                 param=delCheckbox.eq(i).val();
-                window.open('/autogen_2/'+param);
+                window.open('/autogen_2/'+param+'?type='+type_text);
                 }
         }
         });
