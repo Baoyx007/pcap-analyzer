@@ -5,6 +5,7 @@
 from server.func import *
 from server.autogen import *
 from flask import session, flash
+import ChangeAtoB
 
 
 # 主页
@@ -36,7 +37,7 @@ def upload():
 # 下载
 @app.route('/download/<id>', methods=['GET'])
 def download(id):
-    pcapfile = get_pcap_entries()
+    pcapfile = get_pcap_entries(id)
     file = pcapfile[0]['filename']
     return send_file("../" + UPLOAD_FOLDER + file, attachment_filename=file, as_attachment=True)
 
@@ -87,7 +88,6 @@ def packetdetail(id, num):
 
 
 # 产生中间配置1
-# TODO 产生的配置要保存到cookie中
 @app.route('/autogen_1/<id>', methods=['POST', 'GET'])
 def gen_config_1(id):
     if request.method == 'POST':
@@ -107,8 +107,16 @@ def gen_config_1(id):
         return render_template("gen_1.html")
     elif request.method == 'GET':
         mid_data = session['MID_DATA_LIST']
-        session.pop('MID_DATA_LIST', None)
+        #   session.pop('MID_DATA_LIST', None)
         return render_template('gen_1.html', DataList=mid_data)
+
+
+# 下载autoge_1 的文件
+@app.route('/autogen_1/down', methods=['GET'])
+def autogen_1_down():
+    ChangeAtoB.gen_1_xml(session['MID_DATA_LIST'])
+    file = 'yj_hp_in.conf'
+    return send_file("cfg/yj_hp_in.conf", attachment_filename=file, as_attachment=True)
 
 
 # 读取pair中的请求对，返还给前端
