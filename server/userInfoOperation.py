@@ -8,7 +8,7 @@ import func
 __author__ = 'hx'
 class userInfo:
     def __init__(self):
-        self.db=func.get_connection()
+        self.db=func.connect_db()
     def closeDB(self):
         self.db.commit()
         self.db.close()
@@ -23,9 +23,9 @@ class userInfo:
         userInfo.closeDB(self)
     def getUserInfo(self):
         cursor=self.db.execute('select * from userInfo')
-        entries = [dict(user_id=row[1], user_name=row[2], user_companyName=row[3],
-                        user_Title=row[4],user_mobile=row[5],user_email=row[6],
-                        user_groupName=row[7],user_address=row[8],user_nickname=row[9],
-                    user_birthday=row[10],user_notes=row[11]) for row in cursor.fetchall()]
+        entries = [dict(user_id=row[0], user_name=row[1], user_companyName=row[2],
+                        user_Title=row[3],user_mobile=row[4],user_email=row[5],
+                        user_groupName=row[6],user_address=row[7],user_nickname=row[8],
+                    user_birthday=row[9],user_notes=row[10]) for row in cursor.fetchall()]
         userInfo.closeDB(self)
         return entries
