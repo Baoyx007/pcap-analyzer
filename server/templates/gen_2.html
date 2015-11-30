@@ -120,7 +120,9 @@
                     </td>
                     <td>
                     <div class="ui fluid action input">
-                        <input type="text">
+                        <div title="hi">
+                            <input type="text">
+                        </div>
                         <div class="hello" style="width:90%;float:right;display:none">
                             <input type="text">
                         </div>
@@ -344,7 +346,7 @@
             $("#hide2").addClass('hidden');
         }
 	});
-	$('#body input').blur(function() {
+	$('#body div[title=hi] input').blur(function() {
 	    var val=$(this).val();
 	    if(val!="")
 	    {
