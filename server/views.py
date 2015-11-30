@@ -25,7 +25,8 @@ def upload():
 
         ui = userInfo()
         Contacts = []
-        return render_template('upload.html', CapFiles=show_entries(), Devices=di.getDeviceInfo(), Contacts = ui.getUserInfo())
+        return render_template('upload.html', CapFiles=show_entries(), Devices=di.getDeviceInfo(), \
+                               Contacts=ui.getUserInfo())
     elif request.method == 'POST':
         file = request.files['pcapfile']
         if file and allowed_file(file.filename):
@@ -188,6 +189,7 @@ def addDevice():
     print "" + device_id + device_name + device_imei + device_os + device_serialNumber
     di.addDeviceInfo(device_id, device_name, device_imei, device_os, device_serialNumber)
     return 'ok'
+
 
 from userInfoOperation import *
 @app.route('/addContact', methods=['POST'])

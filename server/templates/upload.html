@@ -74,16 +74,45 @@
 		</div>
 		<div class="ui segment two column fitted stackable grid">
 			<div class="ui eight wide column">
+				<h5 class="ui dividing header">Select Contact</h5>
+				<div>
+					<select  class="ui dropdown" id="searchContact" >
+						{% set id=0 %}
+						{% for contact in Contacts %}
+							<option value="{{id}}">{{contact.user_name}}</option>
+							{% set id=id+1 %}
+						{% endfor %}
+					</select>
+				</div>
+				<div class="ui secondary segment">
+					<p id="contactMessage"></p>
+				</div>
+				<tfoot class="full-width">
+					<tr>
+						<th colspan="4">
+							<div class="ui small button" id="addUser-button">
+							  	Add
+							</div>
+							<div class="ui small button" id="deleteUser-button">
+							  	Delete
+							</div>
+						</th>
+					</tr>
+			  	</tfoot>
+			</div>
+			<div class="ui eight wide column">
 				<h5 class="ui dividing header">Select Device</h5>
 				<div>
 					<select  class="ui search dropdown" id="searchDevice" >
-						<option>Android</option>
-						<option>IOS</option>
-					</select></div>
+						{% set id=0 %}
+						{% for device in Devices %}
+							<option value="{{id}}">{{device.device_imei}}</option>
+							{% set id=id+1 %}
+						{% endfor %}
+					</select>
+				</div>
 				<div class="ui secondary segment">
-					{% for device in Devices %}
-						<p id="deviceMessage">{{device.device_id}} {{device.device_name}} {{device.device_imei}} {{device.device_os}} {{device.device_SerialNumber}}</p>
-					{% endfor %}
+					<p id="deviceMessage"></p>
 				</div>
 				<tfoot class="full-width">
 					<tr>
@@ -98,30 +127,37 @@
 					</tr>
 			  	</tfoot>
 			</div>
-			<div class="ui ui eight wide column">
-				<h5 class="ui dividing header">Select User</h5>
-				<div>
-					<select  class="ui search dropdown" id="searchUser" >
-						{% for contact in Contacts %}
-						<option>{{contact.user_name}}</option>
-						{% endfor %}
-					</select>
-				</div>
-				<div class="ui secondary segment">
-				</div>
-				<tfoot class="full-width">
-					<tr>
-						<th colspan="4">
-							<div class="ui small button" id="addUser-button">
-								Add
-							</div>
-							<div class="ui small button" id="deleteUser-button">
-								Delete
-							</div>
-						</th>
-					</tr>
-			  </tfoot>
-			</div>
+			<script>
+				//Contact
+				var array=[];
+				{% for contact in Contacts %}
+					array.push("Name: {{contact.user_name}};  CompanyName: {{contact.user_companyName}};  Titile: {{contact.user_Title}};  Mobile: {{contact.user_mobile}};  Email: {{contact.user_email}};  GroupName: {{contact.user_groupName}};  Address: {{contact.user_address}};  NickName: {{contact.user_nickname}};  Birthday: {{contact.user_birthday}};  Nodes: {{contact.user_notes}}");
+				{% endfor %}
+				function contactToStr(text) {
+					$("#contactMessage").html(text);
+				}
+				var ci=$("#searchContact").find("option:selected").val();
+				contactToStr(array[ci]);
+				$("#searchContact").change(function(){
+					ci=$("#searchContact").find("option:selected").val();
+					contactToStr(array[ci]);
+				});
+
+				//Device
+				var devices=[];
+				{% for device in Devices %}
+					devices.push("ID: {{device.device_id}};  Name: {{device.device_name}};  IMEI: {{device.device_imei}};  OS: {{device.device_os}};  SerialNumber: {{device.device_SerialNumber}}");
+				{% endfor %}
+				function deviceToStr(text) {
+					$("#deviceMessage").html(text);
+				}
+				var di=$("#searchDevice").find("option:selected").val();
+				deviceToStr(devices[di]);
+				$("#searchDevice").change(function(){
+					di=$("#searchDevice").find("option:selected").val();
+					deviceToStr(devices[di]);
+				});
+			</script>
 		</div>
 		<div class="ui black small right floated button" id="analyze-button">
 			<i class="send icon" ></i>&nbsp&nbspFirst &nbsp&nbsp&nbspAnalyze
@@ -208,7 +244,7 @@
 	    </div>
 	</div>
 	<div class="ui small ok modal " id='addUser-ok'>
-		<div class="ui segment" id="hidden_div">
+		<div class="ui segment" id="hidden2_div">
 			<h5 class="ui dividing header">Add Your Contact Information</h5>
 			<form class="ui form segment">
 				<div class="fields">
