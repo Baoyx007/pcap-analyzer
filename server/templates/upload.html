@@ -72,35 +72,62 @@
 				</div>
 			</div>
 		</div>
-		<div class="ui black raised segment">
-			<h5 class="ui dividing header">Select Device</h5>
-			<div>
-				<select  class="ui search dropdown" id="searchDevice" >
-					<option value="">Shanghai</option>
-					<option value="SH">Shanghai</option>
-					<option value="NJ">Nanjing</option>
-				</select></div>
-			<div class="ui secondary segment">
-    				<p id="deviceMessage"></p>
+		<div class="ui segment two column fitted stackable grid">
+			<div class="ui eight wide column">
+				<h5 class="ui dividing header">Select Device</h5>
+				<div>
+					<select  class="ui search dropdown" id="searchDevice" >
+						<option>Android</option>
+						<option>IOS</option>
+					</select></div>
+				<div class="ui secondary segment">
+					{% for device in Devices %}
+						<p id="deviceMessage">{{device.device_id}} {{device.device_name}} {{device.device_imei}} {{device.device_os}} {{device.device_SerialNumber}}</p>
+					{% endfor %}
+				</div>
+				<tfoot class="full-width">
+					<tr>
+						<th colspan="4">
+							<div class="ui small button" id="addDevice-button">
+							  	Add
+							</div>
+							<div class="ui small button" id="deleteDevice-button">
+							  	Delete
+							</div>
+						</th>
+					</tr>
+			  	</tfoot>
 			</div>
-			<tfoot class="full-width">
-		    <tr>
-		      <th colspan="4">
-		        <div class="ui small button" id="addDevice-button">
-		          Add
-		        </div>
-		        <div class="ui small button" id="deleteDevice-button">
-		          Delete
-		        </div>
-		      </th>
-		    </tr>
-		  </tfoot>
+			<div class="ui ui eight wide column">
+				<h5 class="ui dividing header">Select User</h5>
+				<div>
+					<select  class="ui search dropdown" id="searchUser" >
+						{% for contact in Contacts %}
+						<option>{{contact.user_name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="ui secondary segment">
+				</div>
+				<tfoot class="full-width">
+					<tr>
+						<th colspan="4">
+							<div class="ui small button" id="addUser-button">
+								Add
+							</div>
+							<div class="ui small button" id="deleteUser-button">
+								Delete
+							</div>
+						</th>
+					</tr>
+			  </tfoot>
+			</div>
 		</div>
 		<div class="ui black small right floated button" id="analyze-button">
-		          <i class="send icon" ></i>&nbsp&nbspFirst &nbsp&nbsp&nbspAnalyze
+			<i class="send icon" ></i>&nbsp&nbspFirst &nbsp&nbsp&nbspAnalyze
 		</div>
 		<br><br><br>
-		 <div class="ui black small right floated button" id="send_gen_2">
+		<div class="ui black small right floated button" id="send_gen_2">
             <i class="send icon"></i>Second Analyze
         </div>
 
@@ -144,92 +171,32 @@
 					<div ></div>
 					<div class="field" id="field_id">
 						<label>device_id</label>
-						<input type="text" size="42" name="id">
+						<input type="text" size="42" name="device_id">
 						<div class="ui error message" id="error_id" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 					<div class="field"  id="field_name">
 						<label>device_name</label>
-						<input type="text" size="42" name="name">
+						<input type="text" size="42" name="device_name">
 						<div class="ui error message" id="error_name" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 					<div class="field" id="field_imei">
 						<label>device_imei</label>
-						<input type="text" size="42" name="imei">
+						<input type="text" size="42" name="device_imei">
 						<div class="ui error message" id="error_imei" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 					<div class="field" id="field_os">
 						<label>device_os</label>
-						<input type="text" size="42" name="os">
+						<input type="text" size="42" name="device_os">
 						<div class="ui error message" id="error_os" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 					<div class="field" id="field_serialNumber">
 						<label>device_SerialNumber</label>
-						<input type="text" size="42" name="serialNumber">
+						<input type="text" size="42" name="device_serialNumber">
 						<div class="ui error message" id="error_serialNumber" style="display:none"><ul class="list"><li>Please enter a valid e-mail</li></ul></div>
 					</div>
 				</div>
-			<script>
-				$('input[name="id"]').blur(function() {
-					var div1=document.getElementById('error_id');
-					if($(this).val() === "" || $(this).val() === null ) {
-						$("#field_id").addClass('error');
-						div1.style.display='block';
-					}
-					else{
-						$("#field_id").removeClass('error');
-						div1.style.display='none';
-					}
-				});
-				$('input[name="name"]').blur(function() {
-					var div1=document.getElementById('error_name');
-					if($(this).val() === "" || $(this).val() === null ) {
-						$("#field_name").addClass('error');
-						div1.style.display='block';
-					}
-					else{
-						$("#field_name").removeClass('error');
-						div1.style.display='none';
-					}
-				});
-				$('input[name="imei"]').blur(function() {
-					var div1=document.getElementById('error_imei');
-					if($(this).val() === "" || $(this).val() === null ) {
-						$("#field_imei").addClass('error');
-						div1.style.display='block';
-					}
-					else{
-						$("#field_imei").removeClass('error');
-						div1.style.display='none';
-					}
-				});
-				$('input[name="os"]').blur(function() {
-					var div1=document.getElementById('error_os');
-					if($(this).val() === "" || $(this).val() === null ) {
-						$("#field_os").addClass('error');
-						div1.style.display='block';
-					}
-					else{
-						$("#field_os").removeClass('error');
-						div1.style.display='none';
-					}
-				});
-				$('input[name="serialNumber"]').blur(function() {
-					var div1=document.getElementById('error_serialNumber');
-					if($(this).val() === "" || $(this).val() === null ) {
-						$("#field_serialNumber").addClass('error');
-						div1.style.display='block';
-					}
-					else{
-						$("#field_serialNumber").removeClass('error');
-						div1.style.display='none';
-					}
-				});
-
-			</script>
 			</form>
-
 		</div>
-
 	    <div class="actions">
 	      <div class="ui negative button">
 	        No
@@ -240,7 +207,75 @@
 	      </div>
 	    </div>
 	</div>
-
+	<div class="ui small ok modal " id='addUser-ok'>
+		<div class="ui segment" id="hidden_div">
+			<h5 class="ui dividing header">Add Your Contact Information</h5>
+			<form class="ui form segment">
+				<div class="fields">
+					<div ></div>
+					<div class="field" id="field_user_name">
+						<label>user_name</label>
+						<input type="text" size="42" name="user_name">
+						<div class="ui error message" id="error_user_name" style="display:none"><ul class="list"><li>Please enter a valid user name</li></ul></div>
+					</div>
+					<div class="field"  id="field_user_companyName">
+						<label>user_companyName</label>
+						<input type="text" size="42" name="user_companyName">
+						<div class="ui error message" id="error_user_companyName" style="display:none"><ul class="list"><li>Please enter a valid user company name</li></ul></div>
+					</div>
+					<div class="field" id="field_user_title">
+						<label>user_title</label>
+						<input type="text" size="42" name="user_title">
+						<div class="ui error message" id="error_user_title" style="display:none"><ul class="list"><li>Please enter a valid user title</li></ul></div>
+					</div>
+					<div class="field" id="field_user_mobile">
+						<label>user_mobile</label>
+						<input type="text" size="42" name="user_mobile">
+						<div class="ui error message" id="error_user_mobile" style="display:none"><ul class="list"><li>Please enter a valid user mobile</li></ul></div>
+					</div>
+					<div class="field" id="field_user_email">
+						<label>user_email</label>
+						<input type="text" size="42" name="user_email">
+						<div class="ui error message" id="error_user_email" style="display:none"><ul class="list"><li>Please enter a valid user email</li></ul></div>
+					</div>
+					<div class="field" id="field_user_groupName">
+						<label>user_groupName</label>
+						<input type="text" size="42" name="user_groupName">
+						<div class="ui error message" id="error_user_groupName" style="display:none"><ul class="list"><li>Please enter a valid user group name</li></ul></div>
+					</div>
+					<div class="field" id="field_user_address">
+						<label>user_address</label>
+						<input type="text" size="42" name="user_address">
+						<div class="ui error message" id="error_user_address" style="display:none"><ul class="list"><li>Please enter a valid user address</li></ul></div>
+					</div>
+					<div class="field" id="field_user_nickname">
+						<label>user_nickname</label>
+						<input type="text" size="42" name="user_nickname">
+						<div class="ui error message" id="error_user_nickname" style="display:none"><ul class="list"><li>Please enter a valid user nickname</li></ul></div>
+					</div>
+					<div class="field" id="field_user_birthday">
+						<label>user_birthday</label>
+						<input type="text" size="42" name="user_birthday">
+						<div class="ui error message" id="error_user_birthday" style="display:none"><ul class="list"><li>Please enter a valid user birthday</li></ul></div>
+					</div>
+					<div class="field" id="field_user_notes">
+						<label>user_notes</label>
+						<input type="text" size="42" name="user_notes">
+						<div class="ui error message" id="error_user_notes" style="display:none"><ul class="list"><li>Please enter a valid notes</li></ul></div>
+					</div>
+				</div>
+			</form>
+		</div>
+	    <div class="actions">
+	      <div class="ui negative button">
+	        No
+	      </div>
+	      <div class="ui positive right labeled icon button">
+	        Yes
+	        <i class="checkmark icon"></i>
+	      </div>
+	    </div>
+	</div>
 	</div>
 	</div>
 
