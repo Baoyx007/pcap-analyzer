@@ -120,7 +120,11 @@
                     </td>
                     <td>
                     <div class="ui fluid action input">
-                      <input type="text">
+                        <input type="text">
+                        <div class="hello" style="width:90%;float:right;display:none">
+                            <input type="text">
+                        </div>
+
                     </div>
                     </td>
                     <td>
@@ -222,7 +226,7 @@
             var s_id=$(this).attr("id");
             var s = "" + getSelect();
             $("#hide").removeClass('hidden');
-            $("#hide").css({"left": e.clientX - 140, "top": e.clientY - 70}).fadeIn();
+            $("#hide").css({"left": document.body.scrollLeft+e.clientX - 140, "top": document.body.scrollTop+e.clientY - 70}).fadeIn();
             $("#hide").css({"width": 200}).fadeIn();
             $('#hide a').on("click", function () {
                 var id = parseInt($(this).attr('id'));
@@ -400,7 +404,15 @@
             $('#{{i}}').parent().next().find("td div input").val("");
         {% endfor %}
     }
-
+<!--选择type-->
+    $("#body select").change(function(){
+        text=$(this).find("option:selected").text();
+        if(text=="replace"){
+            $(this).parent().parent().find("td div.hello").show();
+        }else{
+            $(this).parent().parent().find("td div.hello").hide();
+        }
+    });
 <!--判断是否忘记保存-->
     function hasSave(){
         var isSave=true;
@@ -463,10 +475,12 @@
                 var i_detail={};
                 i_detail['infoname']="{{i}}";
                 i_detail['value']=$('#{{i}}').text();
-                var regEx=$('#{{i}}').parent().next().find("td div input").val();
-                i_detail['regex']=regEx;
                 var regexType=$('#{{i}}').parent().next().find("td select").find("option:selected").text();
                 i_detail['regexType']=regexType;
+                var regEx=$('#{{i}}').parent().next().find("td div input").val();
+                if(regexType=="replace")
+                    regEx+="~"+$('#{{i}}').parent().next().find("td div.hello input").val()
+                i_detail['regex']=regEx;
                 var name=$('#{{i}}').attr('name');
                 info[name].push(i_detail);
             }

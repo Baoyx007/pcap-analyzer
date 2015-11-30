@@ -73,8 +73,8 @@ def analyze(id):
         pcapstat['web'], marked = get_web(file, coord_info)
     elif session['TYPE'] == 'TXL':
         pcapstat['web'], marked = get_web(file,
-                                          ['name', 'vcard', 'N', 'tel', 'phone', 'note', 'email', 'mobile', 'address',
-                                           'adr'])
+                                          ['name', 'VCARD', 'N:', 'TEL:', 'phone', 'note', 'email', 'mobile', 'address',
+                                           'ADR:'])
     # dns, pcapstat['dnstable'] = get_dns(file)
     pcapstat['ipsrc'] = dict(ipsrc)
     pcapstat['ipdst'] = dict(ipdst)
