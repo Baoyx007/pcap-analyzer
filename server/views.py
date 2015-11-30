@@ -5,7 +5,6 @@
 from server.func import *
 from server.autogen import *
 from flask import session, flash
-import ChangeAtoB
 
 
 # 主页
@@ -20,7 +19,13 @@ def upload():
     if request.method == 'GET':
         CapFiles = []
         list_file(CapFiles)
-        return render_template('upload.html', CapFiles=show_entries())
+
+        di = DeviceInfo()
+        Devices = []
+
+        ui = userInfo()
+        Contacts = []
+        return render_template('upload.html', CapFiles=show_entries(), Devices=di.getDeviceInfo(), Contacts = ui.getUserInfo())
     elif request.method == 'POST':
         file = request.files['pcapfile']
         if file and allowed_file(file.filename):
@@ -37,7 +42,7 @@ def upload():
 # 下载
 @app.route('/download/<id>', methods=['GET'])
 def download(id):
-    pcapfile = get_pcap_entries(id)
+    pcapfile = get_pcap_entries()
     file = pcapfile[0]['filename']
     return send_file("../" + UPLOAD_FOLDER + file, attachment_filename=file, as_attachment=True)
 
@@ -88,6 +93,7 @@ def packetdetail(id, num):
 
 
 # 产生中间配置1
+# TODO 产生的配置要保存到cookie中
 @app.route('/autogen_1/<id>', methods=['POST', 'GET'])
 def gen_config_1(id):
     if request.method == 'POST':
@@ -107,16 +113,8 @@ def gen_config_1(id):
         return render_template("gen_1.html")
     elif request.method == 'GET':
         mid_data = session['MID_DATA_LIST']
+        session.pop('MID_DATA_LIST', None)
         return render_template('gen_1.html', DataList=mid_data)
-
-
-# 下载autoge_1 的文件
-@app.route('/autogen_1/down', methods=['GET'])
-def autogen_1_down():
-    ChangeAtoB.gen_1_xml(session['MID_DATA_LIST'])
-    session.pop('MID_DATA_LIST', None)
-    file = 'yj_hp_in.conf'
-    return send_file("cfg/yj_hp_in.conf", attachment_filename=file, as_attachment=True)
 
 
 # 读取pair中的请求对，返还给前端
@@ -202,3 +200,34 @@ def teardown_request(exception):
 def hello(user):
     flash('a test')
     return redirect(url_for('index'))
+
+from DeviceOperation import  *
+@app.route('/addDevice', methods=['POST'])
+def addDevice():
+    di = DeviceInfo()
+    device_id = request.values.get("device_id")
+    device_name = request.values.get("device_name")
+    device_imei = request.values.get("device_imei")
+    device_os = request.values.get("device_os")
+    device_serialNumber = request.values.get("device_serialNumber")
+    print "" + device_id + device_name + device_imei + device_os + device_serialNumber
+    di.addDeviceInfo(device_id, device_name, device_imei, device_os, device_serialNumber)
+    return 'ok'
+
+from userInfoOperation import *
+@app.route('/addContact', methods=['POST'])
+def addContact():
+    ui = userInfo()
+    user_name = request.values.get("user_name")
+    user_companyName = request.values.get("user_companyName")
+    user_title = request.values.get("user_title")
+    user_mobile = request.values.get("user_mobile")
+    user_email = request.values.get("user_email")
+    user_groupName = request.values.get("user_groupName")
+    user_address = request.values.get("user_address")
+    user_nickname = request.values.get("user_nickname")
+    user_birthday = request.values.get("user_birthday")
+    user_notes = request.values.get("user_notes")
+    print "" + user_name + user_companyName+ user_title+ user_mobile+ user_email+ user_groupName+ user_address+ user_nickname+ user_birthday+ user_notes
+    ui.addUserInfo('', user_name, user_companyName, user_title, user_mobile, user_email, user_groupName, user_address, user_nickname, user_birthday, user_notes)
+    return 'ok'
