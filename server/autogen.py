@@ -94,8 +94,8 @@ def read_pair(path):
                 frame['res_b'] = res[1]
             else:
                 frame['res_b'] = ''
-        # for k in frame.keys():
-        #     frame[k] = p.sub(r'<br>', frame[k])
+        for k in frame.keys():
+            frame[k] = p.sub(r'<br>', frame[k])
         frame_list.append(frame)
     return frame_list
 

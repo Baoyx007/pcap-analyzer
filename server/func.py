@@ -317,10 +317,10 @@ def get_mail(file):
 
 
 # Web数据包提取
-def get_web(file, coord_info):
+def get_web(file, info):
     result = ""
     mark_frame = list()
-    myre = RegexUtil(coord_info)
+    myre = RegexUtil(info)
     pcap = rdpcap(UPLOAD_FOLDER + file)
     py_cap = pyshark.FileCapture(os.path.join(UPLOAD_FOLDER, file))
     i = 0

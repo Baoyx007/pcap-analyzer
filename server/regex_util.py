@@ -4,10 +4,10 @@ import re
 
 
 class RegexUtil:
-    def __init__(self, infodict):
+    def __init__(self, infolist):
         self.reged = []
-        for info in infodict.values():
-            self.reged.append(re.compile(info + r'\.'))
+        for info in infolist:
+            self.reged.append(re.compile(info))
 
     def match_lng_and_lat(self, http_data):
         for rege in self.reged:

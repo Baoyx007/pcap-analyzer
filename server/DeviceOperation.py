@@ -8,7 +8,7 @@ import func
 __author__ = 'hx'
 class DeviceInfo:
     def __init__(self):
-        self.db=func.get_connection()
+        self.db=func.connect_db()
     def closeDB(self):
         self.db.commit()
         self.db.close()
@@ -20,7 +20,7 @@ class DeviceInfo:
         DeviceInfo.closeDB(self)
     def getDeviceInfo(self):
         cursor=self.db.execute("select * from deviceInfo deviceInfo")
-        entries = [dict(device_no=row[1], device_id=row[2], device_name=row[3], device_imei=row[4],device_os=row[5],device_SerialNumber=row[6]) for row in cursor.fetchall()]
+        entries = [dict(device_no=row[0], device_id=row[1], device_name=row[2], device_imei=row[3],device_os=row[4],device_SerialNumber=row[5]) for row in cursor.fetchall()]
         DeviceInfo.closeDB(self)
         return entries
 
