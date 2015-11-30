@@ -491,7 +491,7 @@
                 delete info[key];
         }
         sendData.locations=info;
-        var patt=new RegExp("Host:([^\r\n]*)");
+        var patt=new RegExp("Host:([^<\r\n]*)");
         var host=patt.exec(now_reqh)[1];
         sendData.host=host;
         var patt2=new RegExp("([^\r\n]*?) (.*?) HTTP/1.1");

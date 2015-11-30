@@ -5,6 +5,7 @@ from server import UPLOAD_FOLDER
 import simplejson as json
 from time import localtime, strftime
 import re
+
 __author__ = 'PCPC'
 
 
@@ -32,6 +33,18 @@ class RegexTree:
             infoname, pattern = self.value.split('~', 1)
             regex = None
             root.append({"infoname": infoname, "pattern": pattern, "regex": regex})
+
+
+class ModeRegTree(RegexTree):
+    def __init__(self, name, value='', mode='default'):
+        super(name, value)
+        self.mode = mode
+
+    def __repr__(self, level=0):
+        ret = "\t" * level + repr(self.name + '#' + self.value + '#' + self.mode) + "\n"
+        for child in self.childrens:
+            ret += child.__repr__(level + 1)
+        return ret
 
 
 def gen_config_1_json(pcapfile, frame_ids, businesss_type='LBS', name=''):
@@ -119,7 +132,10 @@ def mergeTree(total_tree, single_root):
         total_tree.append(single_root)
         return total_tree
     # pt比p大一层
-    p = single_root.childrens[0]
+    if len(single_root) == 0:
+        p = single_root.childrens[0]
+    else:
+        return
     pt = same_root
     # 每层节点对比
     while p is not None or pt is not None:
@@ -146,7 +162,7 @@ def parse_locations(locs):
         total_tree = None
         for info in locs[loc]:
             traces = info['value'].split('~')
-            # 对每一个infoname的value 建立一个单孩子的树
+            # 对每一个infoname的value 建立一个单孩子的树p
             p = None
             for trace in traces:
                 node = RegexTree(trace)
@@ -164,6 +180,25 @@ def parse_locations(locs):
 
 
 def pack_senddata(reg_trees, infos, **kw):
+    pack = {"time": strftime("%Y-%m-%d %H:%M:%S", localtime()), 'info': [], 'locations': {}}
+    pack.update(kw)
+    # 添加inof信息
+    for info in infos:
+        pack['info'].append(info)
+    # 添加regx信息
+    pack['locations'] = {}
+    # 遍历locations
+    for tree in reg_trees:
+        regs = tree[0]
+        name = tree[1]
+        pack['locations'][name] = []
+        for reg in regs:
+            tmp = []
+            reg.convert2json(tmp)
+            pack['locations'][name] += tmp
+    return json.dumps(pack)
+
+def pack_txl(reg_list,infos,**kw):
     pack = {"time": strftime("%Y-%m-%d %H:%M:%S", localtime()), 'info': [], 'locations': {}}
     pack.update(kw)
     # 添加inof信息

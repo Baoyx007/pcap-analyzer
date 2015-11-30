@@ -159,13 +159,17 @@ def gen_config_2_filter():
         filters = []
         # 为每个filter创建一个pack
         for my_filter in request.get_json():
-            # locations 中是regex树
-            locs = my_filter['locations']
-            locs_send = parse_locations(locs)
-            print(locs_send)
-            pack = pack_senddata(locs_send, my_filter['infoDef'], host=my_filter['host'].strip(), url=my_filter['url'],
-                                 method=my_filter['method'])
-            print(pack)
+            if session['TYPE'] == 'LBS':
+                # locations 中是regex树
+                locs = my_filter['locations']
+                locs_send = parse_locations(locs)
+                print(locs_send)
+                pack = pack_senddata(locs_send, my_filter['infoDef'], host=my_filter['host'].strip(),
+                                     url=my_filter['url'],
+                                     method=my_filter['method'])
+                print(pack)
+            elif session['TYPE'] == 'TXL':
+                pass
             filters.append(simplejson.loads(pack))
         # 另外一种解析方式 content.*?point.*?x":"([^"]*)
         # 占时可以选择不解析
