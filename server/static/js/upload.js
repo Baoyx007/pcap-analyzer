@@ -1,11 +1,9 @@
 $(document).ready(function() {
-
     $('select.dropdown').dropdown();
-
     $('#upload-nav').addClass('active');
-
     $('.ui.checkbox').checkbox();
-//实现Select City
+
+    //Select City
     var s={"Shanghai":[121,31],"Nanjing":[118,32]};
     function cityToStr(text){
         var arry_ll=s[text].toString().split(',');
@@ -17,8 +15,8 @@ $(document).ready(function() {
         text=$("#searchCity").find("option:selected").text();
         cityToStr(text);
     });
-//Select City结束
-//实现Select Type
+
+    //Select Type
     function typeToStr(text){
         $("#typeMessage").html("Type:"+text);
     }
@@ -28,7 +26,22 @@ $(document).ready(function() {
         type_text=$("#searchType").find("option:selected").text();
         typeToStr(type_text);
     });
-//Select Type结束
+
+//    //Contact
+//    function contactToStr(text) {
+//        $("#contactMessage").html("Device Info: "+text);
+//    }
+//    var contact_text=$("#searchContact").find("option:selected").text();
+//    contactToStr(contact_text);
+//    $("#searchContact").change(function(){
+//        contact_text=$("#searchContact").find("option:selected").text();
+//        $.post('/showContact', {
+//            user_name : contact_text
+//        }, function(data, status) {
+//            alert(data);
+//        });
+//    });
+
     $('#delete-button').on('click', function(){
         $('.small.del.modal').modal({
             closable  : true,
@@ -116,37 +129,20 @@ $(document).ready(function() {
                 $("#progresslabel").append("Upload OK!");
                 $('#fileupload').attr({"disabled":"disabled"});
                 $('.small.ok.modal').modal('show');
-                history.go(0);
+
         },
     });
 
-   //Add Device Information
-   $('#addDevice-button').on('click', function(){
-       $('#addDevice-ok').modal({
-            closable  : true,
-            allowMultiple: false,
-            onDeny    : function(){
-                return true;
-            },
-            onApprove : function() {
-                addDevice();
-            }
-        }).modal('show');
-    });
-
-   //Add Contact Information
-   $('#addUser-button').on('click', function(){
-       $('#addUser-ok').modal({
-            closable  : true,
-            allowMultiple: false,
-            onDeny    : function(){
-                return true;
-            },
-            onApprove : function() {
-                addContact();
-            }
-        }).modal('show');
-    });
+//    //Device
+//    function deviceToStr(text) {
+//        $("#deviceMessage").html("Device Info: "+text);
+//    }
+//    var device_text=$("#searchDevice").find("option:selected").text();
+//    deviceToStr(device_text);
+//    $("#searchDevice").change(function(){
+//        device_text=$("#searchDevice").find("option:selected").text();
+//        deviceToStr(device_text);
+//    });
 
     $('input[name="device_id"]').blur(function() {
         var div1=document.getElementById('error_id');
@@ -202,6 +198,57 @@ $(document).ready(function() {
             $("#field_serialNumber").removeClass('error');
             div1.style.display='none';
         }
+    });
+
+   //Add Device Information
+   $('#addDevice-button').on('click', function(){
+       $('#addDevice-ok').modal({
+            closable  : true,
+            allowMultiple: false,
+            onDeny    : function(){
+                return true;
+            },
+            onApprove : function() {
+                addDevice();
+            }
+        }).modal('show');
+    });
+
+    function addDevice() {
+        var id_reg = /[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}/;
+
+        var device_id = $('input[name="device_id"]').val();
+        var device_name = $('input[name="device_name"]').val();
+        var device_imei = $('input[name="device_imei"]').val();
+        var device_os = $('input[name="device_os"]').val();
+        var device_serialNumber = $('input[name="device_serialNumber"]').val();
+
+        $.post('/addDevice', {
+            device_id : device_id,
+            device_name:device_name,
+            device_imei: device_imei,
+            device_os:device_os,
+            device_serialNumber:device_serialNumber
+        }, function(data) {
+            if(data=='ok')
+                window.location.reload();
+        });
+    }
+
+
+
+   //Add Contact Information
+   $('#addUser-button').on('click', function(){
+       $('#addUser-ok').modal({
+            closable  : true,
+            allowMultiple: false,
+            onDeny    : function(){
+                return true;
+            },
+            onApprove : function() {
+                addContact();
+            }
+        }).modal('show');
     });
 
     $('input[name="user_name"]').blur(function() {
@@ -324,26 +371,6 @@ $(document).ready(function() {
         }
     });
 
-    function addDevice() {
-        var id_reg = /[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}/;
-
-        var device_id = $('input[name="device_id"]').val();
-        var device_name = $('input[name="device_name"]').val();
-        var device_imei = $('input[name="device_imei"]').val();
-        var device_os = $('input[name="device_os"]').val();
-        var device_serialNumber = $('input[name="device_serialNumber"]').val();
-
-        $.post('/addDevice', {
-            device_id : device_id,
-            device_name:device_name,
-            device_imei: device_imei,
-            device_os:device_os,
-            device_serialNumber:device_serialNumber
-        }, function(data, status) {
-            log.write(status);
-        });
-    }
-
     function addContact() {
         var id_reg = /[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}:[A-F\d]{2}/;
 
@@ -369,10 +396,9 @@ $(document).ready(function() {
             user_nickname: user_nickname,
             user_birthday:user_birthday,
             user_notes:user_notes
-        }, function(data, status) {
-            log.write(status);
+        }, function(data) {
+            if(data=='ok')
+                window.location.reload();
         });
     }
-
-
 });

@@ -20,13 +20,9 @@ def upload():
     if request.method == 'GET':
         CapFiles = []
         list_file(CapFiles)
-
         di = DeviceInfo()
-        Devices = []
-
         ui = userInfo()
-        Contacts = []
-        return render_template('upload.html', CapFiles=show_entries(), Devices=di.getDeviceInfo(),
+        return render_template('upload.html', CapFiles=show_entries(), Devices=di.getDeviceInfo(), \
                                Contacts=ui.getUserInfo())
     elif request.method == 'POST':
         file = request.files['pcapfile']
