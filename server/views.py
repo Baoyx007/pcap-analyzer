@@ -159,18 +159,19 @@ def gen_config_2_filter():
         filters = []
         # 为每个filter创建一个pack
         for my_filter in request.get_json():
-            if session['TYPE'] == 'LBS':
-                # locations 中是regex树
-                locs = my_filter['locations']
-                locs_send = parse_locations(locs)
-                print(locs_send)
-                pack = pack_senddata(locs_send, my_filter['infoDef'], host=my_filter['host'].strip(),
-                                     url=my_filter['url'],
-                                     method=my_filter['method'])
-                print(pack)
-            elif session['TYPE'] == 'TXL':
-                pass
-            filters.append(simplejson.loads(pack))
+            # locations 中是regex树
+            print (my_filter['locations'])
+            locs = my_filter['locations']
+            locs_send = parse_locations(locs)
+            print(locs_send)
+            pack = pack_senddata(locs_send, my_filter['infoDef'], host=my_filter['host'].strip(),
+                                 url=my_filter['url'].split('?', 1)[0],
+                                 method=my_filter['method'])
+            print(pack)
+            if session['TYPE'] == 'TXL':
+                pack = make_pack_to_txl(simplejson.loads(pack))
+            print(pack)
+            filters.append(pack)
         # 另外一种解析方式 content.*?point.*?x":"([^"]*)
         # 占时可以选择不解析
         data1 = {"name": session['NAME'], "type": session['TYPE']}
@@ -178,17 +179,22 @@ def gen_config_2_filter():
         session['data2'] = filters
 
         return 'success'
+
+    # 删除包
     elif request.method == 'GET':
-        template = render_template('template.xml', data1=session['data1'], data2=session['data2'])
+        if session['TYPE'] == 'LBS':
+            template = render_template('template.xml', data1=session['data1'], data2=session['data2'])
+        elif session['TYPE'] == 'TXL':
+            template = render_template('temp_TXL.xml', data1=session['data1'], data2=session['data2'])
+        else:
+            return 'error'
         session.pop('data1', None)
         session.pop('data2', None)
-
         response = make_response(template)
         response.headers['Content-Type'] = 'application/xml'
         return response
 
 
-# 删除包
 @app.route('/delete/<id>', methods=["POST"])
 def delete_file(id):
     delids = id.split(',')

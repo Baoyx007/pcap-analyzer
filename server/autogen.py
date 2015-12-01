@@ -132,8 +132,8 @@ def mergeTree(total_tree, single_root):
         total_tree.append(single_root)
         return total_tree
     # pt比p大一层
-    if len(single_root) == 0:
-        p = single_root.childrens[0]
+    if single_root.childrens is not None:
+        p = single_root.childrens
     else:
         return
     pt = same_root
@@ -198,21 +198,26 @@ def pack_senddata(reg_trees, infos, **kw):
             pack['locations'][name] += tmp
     return json.dumps(pack)
 
-def pack_txl(reg_list,infos,**kw):
-    pack = {"time": strftime("%Y-%m-%d %H:%M:%S", localtime()), 'info': [], 'locations': {}}
-    pack.update(kw)
-    # 添加inof信息
-    for info in infos:
-        pack['info'].append(info)
-    # 添加regx信息
-    pack['locations'] = {}
-    # 遍历locations
-    for tree in reg_trees:
-        regs = tree[0]
-        name = tree[1]
-        pack['locations'][name] = []
-        for reg in regs:
-            tmp = []
-            reg.convert2json(tmp)
-            pack['locations'][name] += tmp
-    return json.dumps(pack)
+
+import copy
+
+
+def make_pack_to_txl(pack):
+    for lockey, locval in pack['locations'].iteritems():
+        for_each = locval
+        pack['locations'][lockey] = {'info_split': '', 'contact_split': '', 'for_each': [], 'for_joint': []}
+        # 在origin中找是否是特殊的mode
+        for reg in for_each:
+            if reg['infoname'] == 'contact_split':
+                pack['locations'][lockey]['contact_split'] = reg['pattern']
+            elif reg['infoname'] == 'info_split':
+                pack['locations'][lockey]['info_split'] = reg['pattern']
+            elif '~' in reg['pattern']:
+                reg_copy = copy.deepcopy(reg)
+                sp = reg['pattern'].split('~')
+                reg_copy['pattern'] = sp[0]
+                reg_copy['replace'] = {'pattern': sp[1], 'replaceValue': sp[2]}
+                pack['locations'][lockey]['for_joint'].append(reg_copy)
+            else:
+                pack['locations'][lockey]['for_each'].append(dict(reg))
+    return pack
