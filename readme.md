@@ -1,12 +1,10 @@
-Pcap Analyzer Online
+Pcap Analyzer 
 ======
 
-Pcap Analyzer
----
 
-在线轻量Pcap流量文件分析工具
+数据包文件分析工具
 
-Web PCAP Storage and Analytic Tool
+Web Package Analytic Tool
 
 ![img](img/pcap-analyzer-01.png)
 
@@ -43,15 +41,20 @@ Files
 └── run.bat(Windows下运行项目)
 ```
 
-Installation/Running
+Install
 ---
+- Linux:
+    - $ git clone https://github.com/Baoyx007/pcap-analyzer
+    - $ cd pcap-analyzer'
+    - $ pip install -r requirements.txt
+    - $ python app.py
+    - View http://localhost:8080/
 
-* `$ git clone https://github.com/le4f/pcap-analyzer.git`
-* `$ cd pcap-analyzer`
-* `$ pip install -r requirements.txt`
-* `$ chmod +x run.sh`
-* `$ ./run.sh`
-* `View http://127.0.0.1:8080/ `
+- Window:
+    - Pycharm 导入github 库
+    - 还需要安装3个编译库，参考下面文档
+        - https://github.com/Kondziowy/scapy_win64/tree/master/win64
+        - https://github.com/CoreSecurity/pcapy/wiki/Compiling-Pcapy-on-Windows-Guide
 
 Screenshots
 ---
